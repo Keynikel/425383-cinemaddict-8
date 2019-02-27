@@ -1,8 +1,8 @@
 /* Импорты */
 import {getFilter as makeFilter} from './make-filter';
-import {getCard as makeFilmCard, getCardNoControls as makeFilmCardWithoutControls} from './make-card';
+import {getFilmsMarkup, getCardNoControls as makeFilmCardWithoutControls} from './make-card';
 import * as additionl from './additional-functions';
-import {film} from './film.js';
+import {getFilm} from './film.js';
 
 /* Переменные */
 const MIN_CARDS = 1;
@@ -37,6 +37,8 @@ const filtersList = [
     'label': `Stats`
   }
 ];
+const cardsList = []; // структура, которая описывает все карточки. Мы будем использовать для этого обычный массив.
+
 // const film = {
 //   'title': `The Assassination Of Jessie James By The Coward Robert Ford`,
 //   'rating': `9.8`,
@@ -48,21 +50,21 @@ const filtersList = [
 //   'comments': `13 comments`
 // };
 
+/* Функция для заполнения контейнера карточками по клику на фильтр. v2.0 для функции, которая работает с массивом карточек */
 
-console.log(film);
-
-/* Функция для заполнения контейнера карточками по клику на фильтр */
 export const generateCards = function (min, max, container) {
   const cardsAmount = Math.floor(additionl.getRandomNumber(min, max));
-  additionl.clearField(container);
+  const cardsList = [];
   for (let i = 0; i < cardsAmount; i++) {
-    container.insertAdjacentHTML(`beforeEnd`, makeFilmCard(film));
+    cardsList.push(getFilm());
   }
+  additionl.clearField(container);
+  cardContainer.insertAdjacentHTML(`beforeEnd`, getFilmsMarkup(cardsList));
 };
 
 /* Очищаем блоки на странице*/
 additionl.clearField(filtersContainer);
-//additionl.clearField(cardContainer);
+additionl.clearField(cardContainer);
 topRatedContainer.forEach(function (extraContainer) {
   additionl.clearField(extraContainer);
 });
@@ -72,12 +74,16 @@ filtersList.forEach(function (filter) {
   filtersContainer.insertAdjacentHTML(`beforeEnd`, makeFilter(filter));
 });
 
-// for (let i = 0; i < 7; i++) {
-//   cardContainer.insertAdjacentHTML(`beforeEnd`, makeFilmCard(film));
-// }
+/* Наполняем массив карточками фильмов */
+for (let i = 0; i < 7; i++) {
+  cardsList.push(getFilm());
+}
+/* Наполняем карточками контейнер */
+cardContainer.insertAdjacentHTML(`beforeEnd`, getFilmsMarkup(cardsList));
+
 
 // topRatedContainer.forEach(function (extraContainer) {
-//   for (let i = 0; i < 2; i++) {
+//   for (let i = 0; i < 7; i++) {
 //     extraContainer.insertAdjacentHTML(`beforeEnd`, makeFilmCardWithoutControls(film));
 //   }
 // });

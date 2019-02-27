@@ -1,5 +1,5 @@
-export const getCard = function (card) {
-  return `
+export const getFilmsMarkup = (filmsList) => {
+  return filmsList.map((card) => `
     <article class="film-card">
       <h3 class="film-card__title">${card.title}</h3>
       <p class="film-card__rating">${card.rating}</p>
@@ -9,7 +9,9 @@ export const getCard = function (card) {
         <span class="film-card__genre">${card.genre}</span>
       </p>
       <img src="${card.poster}" alt="" class="film-card__poster">
-      <p class="film-card__description"${card.description}</p>
+      <p class="film-card__description">
+        ${card.description}
+      </p>
       <button class="film-card__comments">${card.comments}</button>
 
       <form class="film-card__controls">
@@ -18,8 +20,8 @@ export const getCard = function (card) {
         <button class="film-card__controls-item button film-card__controls-item--favorite"><!--Mark as favorite-->FAV</button>
       </form>
     </article>
-  `;
-};
+  `).join(``);
+}
 
 export const getCardNoControls = function (card) {
   return `
@@ -32,7 +34,9 @@ export const getCardNoControls = function (card) {
         <span class="film-card__genre">${card.genre}</span>
       </p>
       <img src="${card.poster}" alt="" class="film-card__poster">
-      <p class="film-card__description"${card.description}</p>
+      <p class="film-card__description">
+        ${card.description}
+      </p>
       <button class="film-card__comments">${card.comments}</button>
     </article>
   `;
