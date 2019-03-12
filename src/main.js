@@ -1,16 +1,21 @@
 /* Импорты */
-import {filtersList} from './filters';
-import {getFilter as makeFilter} from './make-filter';
-import {getFilm} from './film.js';
-import {generateCards} from './fill-container';
-import * as utils from './utils';
+import {getFilm} from './get-film.js';
 import {Film} from './film.js';
+import {Popup} from './popup.js';
+import {clearField} from './utils';
 
 
 /* Переменные */
 
 const cardContainer = document.querySelector(`.films-list .films-list__container `);
+const bodyContainer = document.querySelector(`body`);
+const film = getFilm();
+const filmCard = new Film(film);
+const filmPopup = new Popup(film);
 
+clearField(cardContainer);
+cardContainer.appendChild(filmCard.render());
 
-const firstCard = new Film(getFilm());
-console.log(firstCard);
+filmCard.onClick = () => {
+
+};
