@@ -11,43 +11,39 @@ export class Film {
     this._description = data.description;
     this._commtens = data.comments;
     this._element = null;
-    this._onClick = () => { alert(`hola`); };
 
+    this._onClick = null;
     this._onCommentsLinkClick = this._onCommentsLinkClick.bind(this);
+
   }
 
   get element() {
     return this._element;
   }
 
-  _onCommentsLinkClick() {
-    //console.log(this);
-    return typeof this._onEdit === `function` && this._onClick();
-  }
-
-  set onClick(fn) {
-    this._onClick = fn;
-  }
-
-  bind() {
-    this._element.querySelector(`.film-card__comments`)
-        .addEventListener(`click`, this._onCommentsLinkClick);
-  }
-
-  unbind() {
-    this._element.querySelector(`.film-card__comments`)
-        .removeEventListener(`click`, this._onCommentsLinkClick);
-  }
-
   render() {
     this._element = createElement(this.template);
-    this.bind();
+    this.createListener();
     return this._element;
   }
 
   unrender() {
     this._element.remove();
     this._element = null;
+  }
+  _onCommentsLinkClick() {
+    return typeof this._onClick === `function` && this._onClick();
+  }
+
+  set onClick(fn) {
+    this._onClick = fn;
+  }
+
+
+  createListener() {
+    this._element.querySelector(`.film-card__comments`)
+        .addEventListener(`click`, this._onCommentsLinkClick);
+
   }
 
   get template() {

@@ -9,13 +9,26 @@ import {clearField} from './utils';
 
 const cardContainer = document.querySelector(`.films-list .films-list__container `);
 const bodyContainer = document.querySelector(`body`);
-const film = getFilm();
-const filmCard = new Film(film);
-const filmPopup = new Popup(film);
+const filmArray = [];
+const popupArray = [];
+
+for (let i = 0; i < 7; i++) {
+  const film = getFilm();
+  filmArray[i] = new Film(film);
+  popupArray[i] = new Popup(film);
+}
 
 clearField(cardContainer);
-cardContainer.appendChild(filmCard.render());
+filmArray.forEach(function (film, index) {
+  cardContainer.appendChild(film.render());
 
-filmCard.onClick = () => {
+  film.onClick = () => {
+    bodyContainer.appendChild(popupArray[index].render());
+  };
+});
 
-};
+popupArray.forEach(function (popup) {
+  popup.onClick = () => {
+    popup.unrender();
+  };
+});

@@ -12,20 +12,13 @@ export class Popup {
     this._description = data.description;
     this._commtens = data.comments;
     this._element = null;
+
+    this._onClick = null;
+    this._onCloseButtonClick = this._onCloseButtonClick.bind(this);
   }
 
   get element() {
     return this._element;
-  }
-
-  render() {
-    this._element = createElement(this.template);
-    return this._element;
-  }
-
-  unrender() {
-    this._element.remove();
-    this._element = null;
   }
 
   get template() {
@@ -193,4 +186,36 @@ export class Popup {
       </form>
     </section>`.trim();
   }
+
+
+  set onClick(fn) {
+    this._onClick = fn;
+  }
+
+  render() {
+    this._element = createElement(this.template);
+    this.createListener();
+    return this._element;
+  }
+
+  unrender() {
+    this.removeListener();
+    this._element.remove();
+    this._element = null;
+  }
+
+  _onCloseButtonClick() {
+    return typeof this._onClick === `function` && this._onClick();
+  }
+
+  createListener() {
+    this._element.querySelector(`.film-details__close-btn`)
+        .addEventListener(`click`, this._onCloseButtonClick);
+  }
+
+  removeListener() {
+    this._element.querySelector(`.film-details__close-btn`)
+        .removeEventListener(`click`, this._onCloseButtonClick);
+  }
+
 }
