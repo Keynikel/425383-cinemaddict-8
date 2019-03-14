@@ -14,8 +14,8 @@ const popupArray = [];
 
 for (let i = 0; i < 7; i++) {
   const film = getFilm();
-  filmArray[i] = new Film(film);
-  popupArray[i] = new Popup(film);
+  filmArray.push(new Film(film));
+  popupArray.push(new Popup(film));
 }
 
 clearField(cardContainer);
