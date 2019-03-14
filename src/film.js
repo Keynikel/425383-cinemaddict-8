@@ -14,11 +14,14 @@ export class Film {
 
     this._onClick = null;
     this._onCommentsLinkClick = this._onCommentsLinkClick.bind(this);
-
   }
 
   get element() {
     return this._element;
+  }
+
+  set onClick(fn) {
+    this._onClick = fn;
   }
 
   render() {
@@ -34,11 +37,6 @@ export class Film {
   _onCommentsLinkClick() {
     return typeof this._onClick === `function` && this._onClick();
   }
-
-  set onClick(fn) {
-    this._onClick = fn;
-  }
-
 
   createListener() {
     this._element.querySelector(`.film-card__comments`)
