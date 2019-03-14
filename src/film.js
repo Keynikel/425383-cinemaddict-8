@@ -1,7 +1,8 @@
-import {createElement} from './utils.js';
+import {Component} from './component';
 
-export class Film {
+export class Film extends Component {
   constructor(data) {
+    super();
     this._title = data.title;
     this._rating = data.rating;
     this._year = data.year;
@@ -14,34 +15,6 @@ export class Film {
 
     this._onClick = null;
     this._onCommentsLinkClick = this._onCommentsLinkClick.bind(this);
-  }
-
-  get element() {
-    return this._element;
-  }
-
-  set onClick(fn) {
-    this._onClick = fn;
-  }
-
-  render() {
-    this._element = createElement(this.template);
-    this.createListener();
-    return this._element;
-  }
-
-  unrender() {
-    this._element.remove();
-    this._element = null;
-  }
-  _onCommentsLinkClick() {
-    return typeof this._onClick === `function` && this._onClick();
-  }
-
-  createListener() {
-    this._element.querySelector(`.film-card__comments`)
-        .addEventListener(`click`, this._onCommentsLinkClick);
-
   }
 
   get template() {
@@ -64,5 +37,19 @@ export class Film {
           <button class="film-card__controls-item button film-card__controls-item--favorite"><!--Mark as favorite-->FAV</button>
         </form>
       </article>`.trim();
+  }
+
+  set onClick(fn) {
+    this._onClick = fn;
+  }
+
+  _onCommentsLinkClick() {
+    return typeof this._onClick === `function` && this._onClick();
+  }
+
+  createListener() {
+    this._element.querySelector(`.film-card__comments`)
+        .addEventListener(`click`, this._onCommentsLinkClick);
+
   }
 }
