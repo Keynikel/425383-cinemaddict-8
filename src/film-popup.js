@@ -96,41 +96,41 @@ export class FilmPopup extends Component {
         </section>
 
         <section class="film-details__comments-wrap">
-          <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">1</span></h3>
+        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">1</span></h3>
 
-          <ul class="film-details__comments-list">
-            <li class="film-details__comment">
-              <span class="film-details__comment-emoji">рџґ</span>
-              <div>
-                <p class="film-details__comment-text">So long-long story, boring!</p>
-                <p class="film-details__comment-info">
-                  <span class="film-details__comment-author">Tim Macoveev</span>
-                  <span class="film-details__comment-day">3 days ago</span>
-                </p>
-              </div>
-            </li>
-          </ul>
+        <ul class="film-details__comments-list">
+          <li class="film-details__comment">
+            <span class="film-details__comment-emoji">😴</span>
+            <div>
+              <p class="film-details__comment-text">So long-long story, boring!</p>
+              <p class="film-details__comment-info">
+                <span class="film-details__comment-author">Tim Macoveev</span>
+                <span class="film-details__comment-day">3 days ago</span>
+              </p>
+            </div>
+          </li>
+        </ul>
 
           <div class="film-details__new-comment">
-            <div>
-              <label for="add-emoji" class="film-details__add-emoji-label">рџђ</label>
-              <input type="checkbox" class="film-details__add-emoji visually-hidden" id="add-emoji">
+        <div>
+          <label for="add-emoji" class="film-details__add-emoji-label">😐</label>
+          <input type="checkbox" class="film-details__add-emoji visually-hidden" id="add-emoji">
 
-              <div class="film-details__emoji-list">
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
-                <label class="film-details__emoji-label" for="emoji-sleeping">рџґ</label>
+          <div class="film-details__emoji-list">
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
+            <label class="film-details__emoji-label" for="emoji-sleeping">😴</label>
 
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-neutral-face" value="neutral-face" checked>
-                <label class="film-details__emoji-label" for="emoji-neutral-face">рџђ</label>
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-neutral-face" value="neutral-face" checked>
+            <label class="film-details__emoji-label" for="emoji-neutral-face">😐</label>
 
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-grinning" value="grinning">
-                <label class="film-details__emoji-label" for="emoji-grinning">рџЂ</label>
-              </div>
-            </div>
-            <label class="film-details__comment-label">
-              <textarea class="film-details__comment-input" placeholder="в†ђ Select reaction, add comment here" name="comment"></textarea>
-            </label>
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-grinning" value="grinning">
+            <label class="film-details__emoji-label" for="emoji-grinning">😀</label>
           </div>
+        </div>
+        <label class="film-details__comment-label">
+          <textarea class="film-details__comment-input" placeholder="← Select reaction, add comment here" name="comment"></textarea>
+        </label>
+      </div>
         </section>
 
         <section class="film-details__user-rating-wrap">
