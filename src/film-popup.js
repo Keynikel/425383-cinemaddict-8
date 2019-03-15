@@ -1,7 +1,7 @@
 import {Component} from './component';
 
 
-export class FilmPopup {
+export class FilmPopup extends Component{
 
   constructor(data) {
     super();
