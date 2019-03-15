@@ -1,9 +1,10 @@
-import {createElement} from './utils.js';
+import {Component} from './component';
 
 
-export class Popup {
+export class FilmPopup extends Component {
 
   constructor(data) {
+    super();
     this._title = data.title;
     this._rating = data.rating;
     this._year = data.year;
@@ -16,10 +17,6 @@ export class Popup {
 
     this._onClick = null;
     this._onCloseButtonClick = this._onCloseButtonClick.bind(this);
-  }
-
-  get element() {
-    return this._element;
   }
 
   get template() {
@@ -99,41 +96,41 @@ export class Popup {
         </section>
 
         <section class="film-details__comments-wrap">
-          <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">1</span></h3>
+        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">1</span></h3>
 
-          <ul class="film-details__comments-list">
-            <li class="film-details__comment">
-              <span class="film-details__comment-emoji">😴</span>
-              <div>
-                <p class="film-details__comment-text">So long-long story, boring!</p>
-                <p class="film-details__comment-info">
-                  <span class="film-details__comment-author">Tim Macoveev</span>
-                  <span class="film-details__comment-day">3 days ago</span>
-                </p>
-              </div>
-            </li>
-          </ul>
+        <ul class="film-details__comments-list">
+          <li class="film-details__comment">
+            <span class="film-details__comment-emoji">😴</span>
+            <div>
+              <p class="film-details__comment-text">So long-long story, boring!</p>
+              <p class="film-details__comment-info">
+                <span class="film-details__comment-author">Tim Macoveev</span>
+                <span class="film-details__comment-day">3 days ago</span>
+              </p>
+            </div>
+          </li>
+        </ul>
 
           <div class="film-details__new-comment">
-            <div>
-              <label for="add-emoji" class="film-details__add-emoji-label">😐</label>
-              <input type="checkbox" class="film-details__add-emoji visually-hidden" id="add-emoji">
+        <div>
+          <label for="add-emoji" class="film-details__add-emoji-label">😐</label>
+          <input type="checkbox" class="film-details__add-emoji visually-hidden" id="add-emoji">
 
-              <div class="film-details__emoji-list">
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
-                <label class="film-details__emoji-label" for="emoji-sleeping">😴</label>
+          <div class="film-details__emoji-list">
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
+            <label class="film-details__emoji-label" for="emoji-sleeping">😴</label>
 
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-neutral-face" value="neutral-face" checked>
-                <label class="film-details__emoji-label" for="emoji-neutral-face">😐</label>
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-neutral-face" value="neutral-face" checked>
+            <label class="film-details__emoji-label" for="emoji-neutral-face">😐</label>
 
-                <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-grinning" value="grinning">
-                <label class="film-details__emoji-label" for="emoji-grinning">😀</label>
-              </div>
-            </div>
-            <label class="film-details__comment-label">
-              <textarea class="film-details__comment-input" placeholder="← Select reaction, add comment here" name="comment"></textarea>
-            </label>
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-grinning" value="grinning">
+            <label class="film-details__emoji-label" for="emoji-grinning">😀</label>
           </div>
+        </div>
+        <label class="film-details__comment-label">
+          <textarea class="film-details__comment-input" placeholder="← Select reaction, add comment here" name="comment"></textarea>
+        </label>
+      </div>
         </section>
 
         <section class="film-details__user-rating-wrap">
@@ -188,21 +185,8 @@ export class Popup {
     </section>`.trim();
   }
 
-
   set onClick(fn) {
     this._onClick = fn;
-  }
-
-  render() {
-    this._element = createElement(this.template);
-    this.createListener();
-    return this._element;
-  }
-
-  unrender() {
-    this.removeListener();
-    this._element.remove();
-    this._element = null;
   }
 
   _onCloseButtonClick() {
@@ -218,5 +202,4 @@ export class Popup {
     this._element.querySelector(`.film-details__close-btn`)
         .removeEventListener(`click`, this._onCloseButtonClick);
   }
-
 }
