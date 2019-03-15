@@ -1,9 +1,10 @@
-import {createElement} from './utils.js';
+import {Component} from './component';
 
 
 export class FilmPopup {
 
   constructor(data) {
+    super();
     this._title = data.title;
     this._rating = data.rating;
     this._year = data.year;
@@ -16,10 +17,6 @@ export class FilmPopup {
 
     this._onClick = null;
     this._onCloseButtonClick = this._onCloseButtonClick.bind(this);
-  }
-
-  get element() {
-    return this._element;
   }
 
   get template() {
@@ -103,7 +100,7 @@ export class FilmPopup {
 
           <ul class="film-details__comments-list">
             <li class="film-details__comment">
-              <span class="film-details__comment-emoji">😴</span>
+              <span class="film-details__comment-emoji">рџґ</span>
               <div>
                 <p class="film-details__comment-text">So long-long story, boring!</p>
                 <p class="film-details__comment-info">
@@ -116,22 +113,22 @@ export class FilmPopup {
 
           <div class="film-details__new-comment">
             <div>
-              <label for="add-emoji" class="film-details__add-emoji-label">😐</label>
+              <label for="add-emoji" class="film-details__add-emoji-label">рџђ</label>
               <input type="checkbox" class="film-details__add-emoji visually-hidden" id="add-emoji">
 
               <div class="film-details__emoji-list">
                 <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
-                <label class="film-details__emoji-label" for="emoji-sleeping">😴</label>
+                <label class="film-details__emoji-label" for="emoji-sleeping">рџґ</label>
 
                 <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-neutral-face" value="neutral-face" checked>
-                <label class="film-details__emoji-label" for="emoji-neutral-face">😐</label>
+                <label class="film-details__emoji-label" for="emoji-neutral-face">рџђ</label>
 
                 <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-grinning" value="grinning">
-                <label class="film-details__emoji-label" for="emoji-grinning">😀</label>
+                <label class="film-details__emoji-label" for="emoji-grinning">рџЂ</label>
               </div>
             </div>
             <label class="film-details__comment-label">
-              <textarea class="film-details__comment-input" placeholder="← Select reaction, add comment here" name="comment"></textarea>
+              <textarea class="film-details__comment-input" placeholder="в†ђ Select reaction, add comment here" name="comment"></textarea>
             </label>
           </div>
         </section>
@@ -188,21 +185,8 @@ export class FilmPopup {
     </section>`.trim();
   }
 
-
   set onClick(fn) {
     this._onClick = fn;
-  }
-
-  render() {
-    this._element = createElement(this.template);
-    this.createListener();
-    return this._element;
-  }
-
-  unrender() {
-    this.removeListener();
-    this._element.remove();
-    this._element = null;
   }
 
   _onCloseButtonClick() {
@@ -218,5 +202,4 @@ export class FilmPopup {
     this._element.querySelector(`.film-details__close-btn`)
         .removeEventListener(`click`, this._onCloseButtonClick);
   }
-
 }
