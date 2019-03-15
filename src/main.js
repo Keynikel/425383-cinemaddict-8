@@ -1,7 +1,7 @@
 /* Импорты */
 import {getFilm} from './get-film.js';
 import {Film} from './film.js';
-import {Popup} from './popup.js';
+import {FilmPopup} from './film-popup.js';
 import {clearField} from './utils';
 
 
@@ -15,7 +15,7 @@ const popupArray = [];
 for (let i = 0; i < 7; i++) {
   const film = getFilm();
   filmArray.push(new Film(film));
-  popupArray.push(new Popup(film));
+  popupArray.push(new FilmPopup(film));
 }
 
 clearField(cardContainer);

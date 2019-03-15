@@ -1,7 +1,7 @@
 import {createElement} from './utils.js';
 
 
-export class Popup {
+export class FilmPopup {
 
   constructor(data) {
     this._title = data.title;
