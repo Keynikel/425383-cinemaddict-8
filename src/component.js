@@ -17,17 +17,17 @@ export class Component {
 
   render() {
     this._element = createElement(this.template);
-    this.createListener();
+    this.createListeners();
     return this._element;
   }
 
   unrender() {
-    this.removeListener();
+    this.removeListeners();
     this._element.remove();
     this._element = null;
   }
 
-  createListener() {}
+  createListeners() {}
 
-  removeListener() {}
+  removeListeners() {}
 }

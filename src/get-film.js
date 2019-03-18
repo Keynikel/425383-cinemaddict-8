@@ -44,5 +44,6 @@ export const getFilm = () => ({
   genre: genres[Math.floor(Math.random() * genres.length)],
   poster: `./images/posters/${posters[Math.floor(Math.random() * posters.length)]}`,
   description: generateDescription(descriptionsFish.split(`. `)),
-  comments: `${Math.floor(utils.getRandomNumber(MIN_COMMENTS, MAX_COMMENTS)) === 1 ? Math.floor(utils.getRandomNumber(MIN_COMMENTS, MAX_COMMENTS)) + ` comment` : Math.floor(utils.getRandomNumber(MIN_COMMENTS, MAX_COMMENTS)) + ` comments` }`
+  comments: `${Math.floor(utils.getRandomNumber(MIN_COMMENTS, MAX_COMMENTS)) === 1 ? Math.floor(utils.getRandomNumber(MIN_COMMENTS, MAX_COMMENTS)) + ` comment` : Math.floor(utils.getRandomNumber(MIN_COMMENTS, MAX_COMMENTS)) + ` comments` }`,
+  yourScore: (Math.floor(utils.getRandomNumber(MIN_RATING, MAX_RATING))),
 });

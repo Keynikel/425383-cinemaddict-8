@@ -47,7 +47,7 @@ export class Film extends Component {
     return typeof this._onClick === `function` && this._onClick();
   }
 
-  createListener() {
+  createListeners() {
     this._element.querySelector(`.film-card__comments`)
         .addEventListener(`click`, this._onCommentsLinkClick);
 

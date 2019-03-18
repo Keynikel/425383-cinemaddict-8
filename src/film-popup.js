@@ -7,6 +7,7 @@ export class FilmPopup extends Component {
     super();
     this._title = data.title;
     this._rating = data.rating;
+    this._yourScore = data.yourScore;
     this._year = data.year;
     this._duration = data.duration;
     this._genre = data.genre;
@@ -16,6 +17,7 @@ export class FilmPopup extends Component {
     this._element = null;
 
     this._onClick = null;
+    this._onChangeScore = this._onChangeScore;
     this._onCloseButtonClick = this._onCloseButtonClick.bind(this);
   }
 
@@ -40,7 +42,7 @@ export class FilmPopup extends Component {
 
               <div class="film-details__rating">
                 <p class="film-details__total-rating">${this._rating}</p>
-                <p class="film-details__user-rating">Your rate 8</p>
+                <p class="film-details__user-rating">Your rate ${this._yourScore}</p>
               </div>
             </div>
 
@@ -150,33 +152,7 @@ export class FilmPopup extends Component {
               <p class="film-details__user-rating-feelings">How you feel it?</p>
 
               <div class="film-details__user-rating-score">
-                <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="1" id="rating-1">
-                <label class="film-details__user-rating-label" for="rating-1">1</label>
-
-                <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="2" id="rating-2">
-                <label class="film-details__user-rating-label" for="rating-2">2</label>
-
-                <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="3" id="rating-3">
-                <label class="film-details__user-rating-label" for="rating-3">3</label>
-
-                <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="4" id="rating-4">
-                <label class="film-details__user-rating-label" for="rating-4">4</label>
-
-                <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="5" id="rating-5" checked>
-                <label class="film-details__user-rating-label" for="rating-5">5</label>
-
-                <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="6" id="rating-6">
-                <label class="film-details__user-rating-label" for="rating-6">6</label>
-
-                <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="7" id="rating-7">
-                <label class="film-details__user-rating-label" for="rating-7">7</label>
-
-                <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="8" id="rating-8">
-                <label class="film-details__user-rating-label" for="rating-8">8</label>
-
-                <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="9" id="rating-9">
-                <label class="film-details__user-rating-label" for="rating-9">9</label>
-
+                ${this._raitingScoreMarkdown()}
               </div>
             </section>
           </div>
@@ -189,17 +165,41 @@ export class FilmPopup extends Component {
     this._onClick = fn;
   }
 
+  update(data) {
+    this._yourScore = data.yourScore;
+  }
+
+  _onChangeScore() {
+
+  }
+
   _onCloseButtonClick() {
     return typeof this._onClick === `function` && this._onClick();
   }
 
-  createListener() {
+  createListeners() {
     this._element.querySelector(`.film-details__close-btn`)
         .addEventListener(`click`, this._onCloseButtonClick);
+
+    const scores = this._element.querySelectorAll(`.film-details__user-rating-label`);
+    scores.forEach(function (score) {
+      //score.addEventListener(`click`, );
+    });
   }
 
-  removeListener() {
+  removeListeners() {
     this._element.querySelector(`.film-details__close-btn`)
         .removeEventListener(`click`, this._onCloseButtonClick);
+  }
+
+  _raitingScoreMarkdown() {
+    let scoreMarkdown = ``;
+    for (let i = 1; i <= 9; i++) {
+      scoreMarkdown += `
+        <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="${i}" id="rating-${i}" ${this._yourScore === i ? `checked` : ``}>
+        <label class="film-details__user-rating-label" for="rating-${i}">${i}</label>
+      `;
+    }
+    return scoreMarkdown;
   }
 }
