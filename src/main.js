@@ -12,27 +12,49 @@ const bodyContainer = document.querySelector(`body`);
 const filmArray = [];
 const popupArray = [];
 
-for (let i = 0; i < 7; i++) {
-  const film = getFilm();
-  filmArray.push(new Film(film));
-  popupArray.push(new FilmPopup(film));
-}
+// for (let i = 0; i < 7; i++) {
+//   const film = getFilm();
+//   filmArray.push(new Film(film));
+//   popupArray.push(new FilmPopup(film));
+// }
+//
+// clearField(cardContainer);
+// filmArray.forEach(function (film, index) {
+//   cardContainer.appendChild(film.render());
+//
+//   film.onClick = () => {
+//     bodyContainer.appendChild(popupArray[index].render());
+//   };
+// });
+//
+// popupArray.forEach(function (popup) {
+//   popup.onClick = () => {
+//     popup.unrender();
+//   };
+//
+//   popup.onChange = (newObject) => {
+//     popup.
+//   }
+// });
+
+
+const film = getFilm();
+const card = new Film(film);
+const popup = new FilmPopup(film);
 
 clearField(cardContainer);
-filmArray.forEach(function (film, index) {
-  cardContainer.appendChild(film.render());
 
-  film.onClick = () => {
-    bodyContainer.appendChild(popupArray[index].render());
-  };
-});
+cardContainer.appendChild(card.render());
+card.onClick = () => {
+  bodyContainer.appendChild(popup.render());
+};
 
-popupArray.forEach(function (popup) {
-  popup.onClick = () => {
-    popup.unrender();
-  };
+popup.onClick = () => {
+  popup.unrender();
+};
 
-  popup.onScore = (newScore) => {
-    // установить оценку
-  }
-});
+popup.onChange = (newObject) => {
+  film.yourScore = newObject;
+  popup.update(film);
+  popup.unrender();
+};

@@ -15,11 +15,11 @@ export class FilmPopup extends Component {
     this._commtens = data.comments;
     this._element = null;
 
+    this._onChange = null;
     this._onClick = null;
-    this._onScore = null;
 
-    this._onChangeScore = this._onChangeScore;
     this._onCloseButtonClick = this._onCloseButtonClick.bind(this);
+    this._onChangeScore = this._onChangeScore.bind(this);
   }
 
   get template() {
@@ -166,30 +166,32 @@ export class FilmPopup extends Component {
     this._onClick = fn;
   }
 
-  set onScore(fn) {
-    this._onScore = fn;
+  set onChange(fn) {
+    this._onChange = fn;
   }
 
-  update(data) {
-    this._yourScore = data.yourScore;
-  }
-
-  _onChangeScore() {
-    return typeof this._onScore === `function` && this._onScore();
+  _onChangeScore(value) {
+    return typeof this._onClick === `function` && this._onChange(value);
   }
 
   _onCloseButtonClick() {
     return typeof this._onClick === `function` && this._onClick();
   }
 
+  update(data) {
+    this._yourScore = parseInt(data.yourScore, 10);
+  }
+
   createListeners() {
     this._element.querySelector(`.film-details__close-btn`)
         .addEventListener(`click`, this._onCloseButtonClick);
 
-    const scores = this._element.querySelectorAll(`.film-details__user-rating-label`);
-    scores.forEach(function (score) {
-      //score.addEventListener(`click`, );
-    });
+    let scores = this._element.querySelectorAll(`.film-details__user-rating-input`);
+    scores.forEach(
+        (score) => score.addEventListener(`change`, () => {
+          this._onChangeScore(score.getAttribute(`value`));
+        })
+    );
   }
 
   removeListeners() {
