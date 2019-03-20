@@ -40,7 +40,7 @@ export const getFilm = () => ({
   title: titles[Math.floor(Math.random() * titles.length)],
   rating: (utils.getRandomNumber(MIN_RATING, MAX_RATING)).toFixed(1),
   year: Math.floor(utils.getRandomNumber(MIN_YEAR, MAX_YEAR)),
-  duration: `${Math.floor(utils.getRandomNumber(MIN_HOURS, MAX_HOURS))}h ${Math.floor(utils.getRandomNumber(5, 60))}m`,
+  duration: `175`,
   genre: genres[Math.floor(Math.random() * genres.length)],
   poster: `./images/posters/${posters[Math.floor(Math.random() * posters.length)]}`,
   description: generateDescription(descriptionsFish.split(`. `)),
