@@ -1,6 +1,4 @@
 import {Component} from './component';
-let moment = require(`moment`);
-
 
 export class FilmPopup extends Component {
 
@@ -18,6 +16,8 @@ export class FilmPopup extends Component {
     this._element = null;
 
     this._onClick = null;
+    this._onScore = null;
+
     this._onChangeScore = this._onChangeScore;
     this._onCloseButtonClick = this._onCloseButtonClick.bind(this);
   }
@@ -166,12 +166,16 @@ export class FilmPopup extends Component {
     this._onClick = fn;
   }
 
+  set onScore(fn) {
+    this._onScore = fn;
+  }
+
   update(data) {
     this._yourScore = data.yourScore;
   }
 
   _onChangeScore() {
-
+    return typeof this._onScore === `function` && this._onScore();
   }
 
   _onCloseButtonClick() {

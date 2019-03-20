@@ -31,4 +31,8 @@ popupArray.forEach(function (popup) {
   popup.onClick = () => {
     popup.unrender();
   };
+
+  popup.onScore = (newScore) => {
+    // установить оценку
+  }
 });
