@@ -4,10 +4,6 @@ const MIN_RATING = 1;
 const MAX_RATING = 10;
 const MIN_YEAR = 1991;
 const MAX_YEAR = 2019;
-const MIN_HOURS = 1;
-const MAX_HOURS = 3;
-const MIN_COMMENTS = 0;
-const MAX_COMMENTS = 40;
 
 const titles = [`Once Upon a Time in Hollywood`, `Joker`, `Dumbo`, `Zeroville`, `The Batman`, `Spider-Man: Far From Home`, `Aladdin`, `Dune`, `It: Chapter Two`, `Bond  25`, `The Lion King`, `Dark Phoenix`, `Avengers: Endgame`, `John Wick: Chapter 3 - Parabellum`, `Men in Black International`];
 const genres = [`Comedy`, `Thriller`, `Horror`, `Adventure `, `Drama`, `Crime`, `Sci-fi`];
@@ -44,6 +40,18 @@ export const getFilm = () => ({
   genre: genres[Math.floor(Math.random() * genres.length)],
   poster: `./images/posters/${posters[Math.floor(Math.random() * posters.length)]}`,
   description: generateDescription(descriptionsFish.split(`. `)),
-  comments: `${Math.floor(utils.getRandomNumber(MIN_COMMENTS, MAX_COMMENTS)) === 1 ? Math.floor(utils.getRandomNumber(MIN_COMMENTS, MAX_COMMENTS)) + ` comment` : Math.floor(utils.getRandomNumber(MIN_COMMENTS, MAX_COMMENTS)) + ` comments` }`,
+  comments: [{
+    icon: `😴`,
+    text: `So long-long story, boring!`,
+    author: `Tim Macoveev`,
+    date: `3 days ago`
+  },
+  {
+    icon: `😐`,
+    text: `Wll its totally okey`,
+    author: `Olika Kell`,
+    date: `1 day ago`
+  }],
   yourScore: (Math.floor(utils.getRandomNumber(MIN_RATING, MAX_RATING))),
+
 });

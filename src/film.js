@@ -31,7 +31,7 @@ export class Film extends Component {
         <img src="${this._poster}" alt="" class="film-card__poster">
         <p class="film-card__description">${this._description}</p>
 
-        <button class="film-card__comments">${this._commtens}</button>
+        <button class="film-card__comments">${this._commtens.length} comments </button>
         <form class="film-card__controls">
           <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist"><!--Add to watchlist--> WL</button>
           <button class="film-card__controls-item button film-card__controls-item--mark-as-watched"><!--Mark as watched-->WTCHD</button>
@@ -42,6 +42,10 @@ export class Film extends Component {
 
   set onClick(fn) {
     this._onClick = fn;
+  }
+
+  update(data) {
+    this._comments = data.comments;
   }
 
   _onCommentsLinkClick() {

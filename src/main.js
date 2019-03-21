@@ -9,8 +9,8 @@ import {clearField} from './utils';
 
 const cardContainer = document.querySelector(`.films-list .films-list__container `);
 const bodyContainer = document.querySelector(`body`);
-const filmArray = [];
-const popupArray = [];
+// const filmArray = [];
+// const popupArray = [];
 
 // for (let i = 0; i < 7; i++) {
 //   const film = getFilm();
@@ -57,4 +57,15 @@ popup.onChange = (newObject) => {
   film.yourScore = newObject;
   popup.update(film);
   popup.unrender();
+  bodyContainer.appendChild(popup.render());
+};
+
+popup.onEnter = (newComments) => {
+  film.comments.push(newComments);
+  popup.update(film);
+  card.update(film);
+  card.unrender();
+  cardContainer.appendChild(card.render());
+  popup.unrender();
+  bodyContainer.appendChild(popup.render());
 };

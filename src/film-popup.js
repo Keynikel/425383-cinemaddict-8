@@ -17,6 +17,7 @@ export class FilmPopup extends Component {
 
     this._onChange = null;
     this._onClick = null;
+    this._onEnter = null;
 
     this._onCloseButtonClick = this._onCloseButtonClick.bind(this);
     this._onChangeScore = this._onChangeScore.bind(this);
@@ -99,19 +100,10 @@ export class FilmPopup extends Component {
         </section>
 
         <section class="film-details__comments-wrap">
-        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">1</span></h3>
+        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${this._commtens.length}</span></h3>
 
         <ul class="film-details__comments-list">
-          <li class="film-details__comment">
-            <span class="film-details__comment-emoji">😴</span>
-            <div>
-              <p class="film-details__comment-text">So long-long story, boring!</p>
-              <p class="film-details__comment-info">
-                <span class="film-details__comment-author">Tim Macoveev</span>
-                <span class="film-details__comment-day">3 days ago</span>
-              </p>
-            </div>
-          </li>
+          ${this._commentsMarkdown()}
         </ul>
 
           <div class="film-details__new-comment">
@@ -170,8 +162,21 @@ export class FilmPopup extends Component {
     this._onChange = fn;
   }
 
+  set onEnter(fn) {
+    this._onEnter = fn;
+  }
+
   _onChangeScore(value) {
     return typeof this._onClick === `function` && this._onChange(value);
+  }
+
+  _onTextareaEnter() {
+    let comment = {};
+    comment.icon = this._element.querySelector(`.film-details__add-emoji-label`).innerHTML;
+    comment.text = this._element.querySelector(`.film-details__comment-input`).value;
+    comment.author = `Olika Kell`;
+    comment.date = `1 day ago`;
+    return typeof this._onEnter === `function` && this._onEnter(comment);
   }
 
   _onCloseButtonClick() {
@@ -180,6 +185,7 @@ export class FilmPopup extends Component {
 
   update(data) {
     this._yourScore = parseInt(data.yourScore, 10);
+    this._comments = data.comments;
   }
 
   createListeners() {
@@ -192,6 +198,13 @@ export class FilmPopup extends Component {
           this._onChangeScore(score.getAttribute(`value`));
         })
     );
+
+    this._element.querySelector(`.film-details__comment-input`)
+      .addEventListener(`keydown`, (e) => {
+        if (e.ctrlKey && e.keyCode === 13) {
+          this._onTextareaEnter();
+        }
+      });
   }
 
   removeListeners() {
@@ -208,5 +221,23 @@ export class FilmPopup extends Component {
       `;
     }
     return scoreMarkdown;
+  }
+
+  _commentsMarkdown() {
+    let commentMarkdown = ``;
+    this._commtens.forEach((comment) => {
+      commentMarkdown += `
+              <li class="film-details__comment">
+                <span class="film-details__comment-emoji">${comment.icon}</span>
+                <div>
+                  <p class="film-details__comment-text">${comment.text}</p>
+                  <p class="film-details__comment-info">
+                    <span class="film-details__comment-author">${comment.author}</span>
+                    <span class="film-details__comment-day">${comment.date}</span>
+                  </p>
+                </div>
+              </li>`;
+    });
+    return commentMarkdown;
   }
 }
