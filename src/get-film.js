@@ -1,9 +1,8 @@
 import * as utils from './utils';
+let moment = require(`moment`);
 
 const MIN_RATING = 1;
 const MAX_RATING = 10;
-const MIN_YEAR = 1991;
-const MAX_YEAR = 2019;
 
 const titles = [`Once Upon a Time in Hollywood`, `Joker`, `Dumbo`, `Zeroville`, `The Batman`, `Spider-Man: Far From Home`, `Aladdin`, `Dune`, `It: Chapter Two`, `Bond  25`, `The Lion King`, `Dark Phoenix`, `Avengers: Endgame`, `John Wick: Chapter 3 - Parabellum`, `Men in Black International`];
 const genres = [`Comedy`, `Thriller`, `Horror`, `Adventure `, `Drama`, `Crime`, `Sci-fi`];
@@ -35,23 +34,25 @@ const generateDescription = (descriptionArray) => {
 export const getFilm = () => ({
   title: titles[Math.floor(Math.random() * titles.length)],
   rating: (utils.getRandomNumber(MIN_RATING, MAX_RATING)).toFixed(1),
-  year: Math.floor(utils.getRandomNumber(MIN_YEAR, MAX_YEAR)),
-  duration: `175`,
+  year: `2015-03-12`,
+  duration: `2:15`,
   genre: genres[Math.floor(Math.random() * genres.length)],
   poster: `./images/posters/${posters[Math.floor(Math.random() * posters.length)]}`,
   description: generateDescription(descriptionsFish.split(`. `)),
-  comments: [{
-    icon: `😴`,
-    text: `So long-long story, boring!`,
-    author: `Tim Macoveev`,
-    date: `3 days ago`
-  },
-  {
-    icon: `😐`,
-    text: `Wll its totally okey`,
-    author: `Olika Kell`,
-    date: `1 day ago`
-  }],
-  yourScore: (Math.floor(utils.getRandomNumber(MIN_RATING, MAX_RATING))),
+  comments: [
+    {
+      icon: `😴`,
+      text: `So long-long story, boring!`,
+      author: `Tim Macoveev`,
+      date: moment().add(5, `days`)
+    },
+    {
+      icon: `😐`,
+      text: `Wll its totally okey`,
+      author: `Olika Kell`,
+      date: moment().add(2, `days`)
+    }
+  ],
+  yourScore: (Math.round(utils.getRandomNumber(MIN_RATING, MAX_RATING))),
 
 });

@@ -1,4 +1,5 @@
 import {Component} from './component';
+let moment = require(`moment`);
 
 export class FilmPopup extends Component {
 
@@ -63,11 +64,11 @@ export class FilmPopup extends Component {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Release Date</td>
-                <td class="film-details__cell">15 June 2018 (USA)</td>
+                <td class="film-details__cell">${moment(this._year).format(`DD MMMM YYYY`)} (USA)</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Runtime</td>
-                <td class="film-details__cell">118 min</td>
+                <td class="film-details__cell"> ${moment.duration(this._duration).as(`minutes`)} min</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Country</td>
@@ -175,7 +176,7 @@ export class FilmPopup extends Component {
     comment.icon = this._element.querySelector(`.film-details__add-emoji-label`).innerHTML;
     comment.text = this._element.querySelector(`.film-details__comment-input`).value;
     comment.author = `Olika Kell`;
-    comment.date = `1 day ago`;
+    comment.date = moment().format();
     return typeof this._onEnter === `function` && this._onEnter(comment);
   }
 
@@ -205,6 +206,13 @@ export class FilmPopup extends Component {
           this._onTextareaEnter();
         }
       });
+
+    let icons = this._element.querySelectorAll(`.film-details__emoji-label`);
+    icons.forEach(
+        (icon) => icon.addEventListener(`click`, () =>
+          this._changeIconMarkdown(icon.innerHTML)
+        )
+    );
   }
 
   removeListeners() {
@@ -233,11 +241,16 @@ export class FilmPopup extends Component {
                   <p class="film-details__comment-text">${comment.text}</p>
                   <p class="film-details__comment-info">
                     <span class="film-details__comment-author">${comment.author}</span>
-                    <span class="film-details__comment-day">${comment.date}</span>
+                    <span class="film-details__comment-day">${moment().to(comment.date)}</span>
                   </p>
                 </div>
               </li>`;
     });
     return commentMarkdown;
+  }
+
+  _changeIconMarkdown(icon) {
+    const iconContainer = this._element.querySelector(`.film-details__add-emoji-label`);
+    iconContainer.innerHTML = icon;
   }
 }
