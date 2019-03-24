@@ -39,6 +39,11 @@ export const getFilm = () => ({
   genre: genres[Math.floor(Math.random() * genres.length)],
   poster: `./images/posters/${posters[Math.floor(Math.random() * posters.length)]}`,
   description: generateDescription(descriptionsFish.split(`. `)),
+  state: {
+    isListed: false,
+    isWatched: true,
+    isFavorite: false
+  },
   comments: [
     {
       icon: `😴`,
@@ -48,7 +53,7 @@ export const getFilm = () => ({
     },
     {
       icon: `😐`,
-      text: `Wll its totally okey`,
+      text: `Well its totally okey`,
       author: `Olika Kell`,
       date: moment().add(2, `days`)
     }

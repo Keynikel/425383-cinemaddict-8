@@ -14,14 +14,14 @@ export const filtersList = [
     'label': `History`,
     'count': 4
   },
-  {
-    'anchor': `favorites`,
-    'label': `Favorites`,
-    'count': 8
-  },
-  {
-    'anchor': `stats`,
-    'state': `additional`,
-    'label': `Stats`
-  }
+  // {
+  //   'anchor': `favorites`,
+  //   'label': `Favorites`,
+  //   'count': 8
+  // },
+  // {
+  //   'anchor': `stats`,
+  //   'state': `additional`,
+  //   'label': `Stats`
+  // }
 ];
