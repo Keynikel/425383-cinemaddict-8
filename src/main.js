@@ -1,15 +1,19 @@
 /* Импорты */
 import {getFilm} from './get-film.js';
 import {getFilters} from './get-filter.js';
+import {getChartsMarkdown} from './get-charts.js';
+import {getCharts} from './get-charts.js';
+import {toggleVisuallity} from './utils.js';
 import {Filter} from './filter.js';
 import {Film} from './film.js';
 import {FilmPopup} from './film-popup.js';
 
 /* Переменные */
 
-const cardsContainer = document.querySelector(`.films-list .films-list__container `);
 const bodyContainer = document.querySelector(`body`);
+const mainContainer = document.querySelector(`main`);
 const filterContainer = document.querySelector(`.main-navigation`);
+const cardsContainer = document.querySelector(`.films-list .films-list__container `);
 const initialFilters = getFilters();
 const initialCards = [];
 for (let i = 0; i <= 7; i++) {
@@ -19,11 +23,18 @@ for (let i = 0; i <= 7; i++) {
 const filterCards = (cards, filterName) => {
   switch (filterName) {
     case `all`:
+      toggleVisuallity(`films`);
       return cards;
     case `watchlist`:
+      toggleVisuallity(`films`);
       return cards.filter((card) => card.state.isListed);
     case `history`:
+      toggleVisuallity(`films`);
       return cards.filter((card) => card.state.isWatched);
+    case `stats`:
+      toggleVisuallity(`statistic`);
+      getCharts();
+
   }
   return 0;
 };
@@ -95,3 +106,4 @@ const renderFilters = (filters) => {
 
 renderFilters(initialFilters, filterContainer);
 renderCards(initialCards, cardsContainer);
+mainContainer.appendChild(getChartsMarkdown());

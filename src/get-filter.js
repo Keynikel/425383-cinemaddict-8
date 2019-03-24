@@ -14,6 +14,11 @@ export const getFilters = () => {
       label: `History`,
       anchor: `history`,
       count: 4
+    },
+    {
+      label: `Stats`,
+      anchor: `stats`,
+      state: `additional`
     }
   ];
 };
