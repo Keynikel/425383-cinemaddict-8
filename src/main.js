@@ -1,12 +1,11 @@
 /* Импорты */
 import {getFilm} from './get-film.js';
 import {getFilters} from './get-filter.js';
-import {getChartsMarkdown} from './get-charts.js';
-import {getCharts} from './get-charts.js';
 import {toggleVisuallity} from './utils.js';
 import {Filter} from './filter.js';
 import {Film} from './film.js';
 import {FilmPopup} from './film-popup.js';
+import {Statistic} from './statistic.js';
 
 /* Переменные */
 
@@ -19,6 +18,7 @@ const initialCards = [];
 for (let i = 0; i <= 7; i++) {
   initialCards[i] = getFilm();
 }
+const chart = new Statistic();
 
 const filterCards = (cards, filterName) => {
   switch (filterName) {
@@ -33,7 +33,7 @@ const filterCards = (cards, filterName) => {
       return cards.filter((card) => card.state.isWatched);
     case `stats`:
       toggleVisuallity(`statistic`);
-      getCharts();
+      chart.chartView();
 
   }
   return 0;
@@ -104,6 +104,11 @@ const renderFilters = (filters) => {
   });
 };
 
+const renderChart = (stat) => {
+
+  mainContainer.appendChild(stat.render());
+};
+
 renderFilters(initialFilters, filterContainer);
 renderCards(initialCards, cardsContainer);
-mainContainer.appendChild(getChartsMarkdown());
+renderChart(chart);
