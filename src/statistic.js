@@ -1,10 +1,82 @@
 import {Component} from './component';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+let moment = require(`moment`);
+
 
 export class Statistic extends Component {
-  constructor() {
+  constructor(data) {
     super();
+    this._genres = this._formGenresArray(data);
+    this._watches = this._countWatchedFilms(data);
+    this._duration = this._countTotalDuration(data);
+  }
+
+  _findTopGenre(genres) {
+    return genres.reduce((acc, item) => {
+      if (acc[item]) {
+        acc[item]++;
+      } else {
+        acc[item] = 1;
+      }
+      return acc;
+    }, {});
+  }
+
+  _formGenresArray(data) {
+    let genres = [];
+    Object.values(data).forEach((it) => {
+      if (it.state.isWatched) {
+        genres.push(it.genre);
+      }
+    });
+    return genres.reduce((acc, item) => {
+      let buffer = this._findTopGenre(item);
+      Object.keys(buffer).forEach((key) => {
+        if (acc[key]) {
+          acc[key] += buffer[key];
+        } else {
+          acc[key] = buffer[key];
+        }
+      });
+      return acc;
+    }, {});
+  }
+
+  _sortGenresByPopular(genres) {
+    let keysSorted = Object.keys(genres).sort(function (a, b) {
+      return genres[b] - genres[a];
+    });
+    return keysSorted;
+  }
+
+  _countWatchedFilms(data) {
+    let allTime = 0;
+    Object.values(data).forEach((it) => {
+      if (it.state.isWatched) {
+        allTime++;
+      }
+    });
+    return allTime;
+  }
+
+  _countTotalDuration(data) {
+    let duration = 0;
+    const result = {};
+    Object.values(data).forEach((it) => {
+      if (it.state.isWatched) {
+        duration = moment.duration(duration).add(moment.duration(it.duration));
+      }
+    });
+    result.hours = duration._data.hours;
+    result.minutes = duration._data.minutes;
+    return result;
+  }
+
+  update(data) {
+    this._genres = this._formGenresArray(data);
+    this._watches = this._countWatchedFilms(data);
+    this._duration = this._countTotalDuration(data);
   }
 
   get template() {
@@ -34,15 +106,15 @@ export class Statistic extends Component {
         <ul class="statistic__text-list">
           <li class="statistic__text-item">
             <h4 class="statistic__item-title">You watched</h4>
-            <p class="statistic__item-text">22 <span class="statistic__item-description">movies</span></p>
+            <p class="statistic__item-text">${this._watches} <span class="statistic__item-description">movies</span></p>
           </li>
           <li class="statistic__text-item">
             <h4 class="statistic__item-title">Total duration</h4>
-            <p class="statistic__item-text">130 <span class="statistic__item-description">h</span> 22 <span class="statistic__item-description">m</span></p>
+            <p class="statistic__item-text">${this._duration.hours} <span class="statistic__item-description">h</span> ${this._duration.minutes}  <span class="statistic__item-description">m</span></p>
           </li>
           <li class="statistic__text-item">
             <h4 class="statistic__item-title">Top genre</h4>
-            <p class="statistic__item-text">Sci-Fi</p>
+            <p class="statistic__item-text">${this._sortGenresByPopular(this._genres)[0]}</p>
           </li>
         </ul>
 
@@ -53,19 +125,24 @@ export class Statistic extends Component {
       .trim();
   }
 
-  get chartView() {
+  chartView() {
     const statisticCtx = document.querySelector(`.statistic__chart`);
     // Обязательно рассчитайте высоту canvas, она зависит от количества элементов диаграммы
     const BAR_HEIGHT = 50;
     statisticCtx.height = BAR_HEIGHT * 5;
+    const labels = this._sortGenresByPopular(this._genres);
+    const data = [];
+    labels.forEach((it) => {
+      data.push(this._genres[it]);
+    });
 
     const myChart = new Chart(statisticCtx, {
       plugins: [ChartDataLabels],
       type: `horizontalBar`,
       data: {
-        labels: [`Sci-Fi`, `Animation`, `Fantasy`, `Comedy`, `TV Series`],
+        labels,
         datasets: [{
-          data: [11, 8, 7, 4, 3],
+          data,
           backgroundColor: `#ffe800`,
           hoverBackgroundColor: `#ffe800`,
           anchor: `start`
@@ -115,7 +192,7 @@ export class Statistic extends Component {
         }
       }
     });
-
+    return myChart;
   }
 
 

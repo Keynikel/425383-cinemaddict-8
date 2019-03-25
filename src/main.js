@@ -18,7 +18,7 @@ const initialCards = [];
 for (let i = 0; i <= 7; i++) {
   initialCards[i] = getFilm();
 }
-const chart = new Statistic();
+const chart = new Statistic(initialCards);
 
 const filterCards = (cards, filterName) => {
   switch (filterName) {
@@ -33,7 +33,6 @@ const filterCards = (cards, filterName) => {
       return cards.filter((card) => card.state.isWatched);
     case `stats`:
       toggleVisuallity(`statistic`);
-      chart.chartView();
 
   }
   return 0;
@@ -63,7 +62,10 @@ const renderCards = (films) => {
       if (film.state.isListed) {
         film.state.isListed = !film.state.isListed;
       }
+      chart.unrender();
+      chart.update(films);
       popup.update(film);
+      renderChart(chart);
     };
 
     popup.onClick = () => {
@@ -105,8 +107,8 @@ const renderFilters = (filters) => {
 };
 
 const renderChart = (stat) => {
-
   mainContainer.appendChild(stat.render());
+  stat.chartView();
 };
 
 renderFilters(initialFilters, filterContainer);

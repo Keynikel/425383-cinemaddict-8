@@ -5,7 +5,7 @@ const MIN_RATING = 1;
 const MAX_RATING = 10;
 
 const titles = [`Once Upon a Time in Hollywood`, `Joker`, `Dumbo`, `Zeroville`, `The Batman`, `Spider-Man: Far From Home`, `Aladdin`, `Dune`, `It: Chapter Two`, `Bond  25`, `The Lion King`, `Dark Phoenix`, `Avengers: Endgame`, `John Wick: Chapter 3 - Parabellum`, `Men in Black International`];
-const genres = [`Comedy`, `Thriller`, `Horror`, `Adventure `, `Drama`, `Crime`, `Sci-fi`];
+const genres = [`Comedy`, `Thriller`, `Horror`, `Adventure`, `Drama`, `Crime`, `Sci-fi`];
 const posters = [`accused.jpg`, `blackmail.jpg`, `blue-blazes.jpg`, `fuga-da-new-york.jpg`, `moonrise.jpg`, `three-friends.jpg`];
 const descriptionsFish = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`;
 
@@ -36,7 +36,7 @@ export const getFilm = () => ({
   rating: (utils.getRandomNumber(MIN_RATING, MAX_RATING)).toFixed(1),
   year: `2015-03-12`,
   duration: `2:15`,
-  genre: genres[Math.floor(Math.random() * genres.length)],
+  genre: [genres[Math.floor(Math.random() * genres.length)], genres[Math.floor(Math.random() * genres.length)], genres[Math.floor(Math.random() * genres.length)]],
   poster: `./images/posters/${posters[Math.floor(Math.random() * posters.length)]}`,
   description: generateDescription(descriptionsFish.split(`. `)),
   state: {
