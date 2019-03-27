@@ -14,8 +14,16 @@ export class Film extends Component {
     this._commtens = data.comments;
     this._element = null;
 
+    this._state = {
+      isListed: data.state.isListed,
+      isWatched: data.state.isWatched,
+      isFavorite: data.state.isFavorite
+    };
+
     this._onClick = null;
     this._onCommentsLinkClick = this._onCommentsLinkClick.bind(this);
+    this._onAddToWatchList = this._onAddToWatchList.bind(this);
+    this._onMarkAsWatched = this._onMarkAsWatched.bind(this);
   }
 
   get template() {
@@ -47,7 +55,18 @@ export class Film extends Component {
     this._onClick = fn;
   }
 
+  set onAddToWatchList(fn) {
+    this._onAddToWatchList = fn;
+  }
+
+  set onMarkAsWatched(fn) {
+    this._onMarkAsWatched = fn;
+  }
+
   update(data) {
+    this._state.isListed = data.state.isListed;
+    this._state.isWatched = data.state.isWatched;
+    this._state.isFavorite = data.state.isFavorite;
     this._comments = data.comments;
   }
 
@@ -55,9 +74,24 @@ export class Film extends Component {
     return typeof this._onClick === `function` && this._onClick();
   }
 
+  _onAddToWatchList(evt) {
+    evt.preventDefault();
+    return typeof this._onAddToWatchList === `function` && this._onAddToWatchList();
+  }
+
+  _onMarkAsWatched(evt) {
+    evt.preventDefault();
+    return typeof this._onMarkAsWatched === `function` && this._onMarkAsWatched();
+  }
+
   createListeners() {
     this._element.querySelector(`.film-card__comments`)
         .addEventListener(`click`, this._onCommentsLinkClick);
 
+    this._element.querySelector(`.film-card__controls-item--add-to-watchlist`)
+      .addEventListener(`click`, this._onAddToWatchList);
+
+    this._element.querySelector(`.film-card__controls-item--mark-as-watched`)
+      .addEventListener(`click`, this._onMarkAsWatched);
   }
 }

@@ -11,3 +11,22 @@ export const createElement = (template) => {
   newElement.innerHTML = template;
   return newElement.firstChild;
 };
+
+export const toggleVisuallity = (classToShow) => {
+  const films = document.querySelector(`.films`);
+  const stats = document.querySelector(`.statistic`);
+  switch (classToShow) {
+    case `films`:
+      if (films.classList.contains(`visually-hidden`)) {
+        films.classList.remove(`visually-hidden`);
+        stats.classList.add(`visually-hidden`);
+      }
+      break;
+    case `statistic`:
+      if (stats.classList.contains(`visually-hidden`)) {
+        stats.classList.remove(`visually-hidden`);
+        films.classList.add(`visually-hidden`);
+      }
+      break;
+  }
+};
