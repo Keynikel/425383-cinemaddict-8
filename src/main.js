@@ -6,6 +6,7 @@ import {Filter} from './filter.js';
 import {Film} from './film.js';
 import {FilmPopup} from './film-popup.js';
 import {Statistic} from './statistic.js';
+import {API} from './api.js';
 
 /* Переменные */
 
@@ -13,31 +14,40 @@ const bodyContainer = document.querySelector(`body`);
 const mainContainer = document.querySelector(`main`);
 const filterContainer = document.querySelector(`.main-navigation`);
 const cardsContainer = document.querySelector(`.films-list .films-list__container `);
+
+const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=${Math.random()}`;
+const END_POINT = ` https://es8-demo-srv.appspot.com/moowle/`;
+const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
+
+
+
 const initialFilters = getFilters();
-const initialCards = [];
-for (let i = 0; i <= 7; i++) {
-  initialCards[i] = getFilm();
-}
-const chart = new Statistic(initialCards);
 
-const filterCards = (cards, filterName) => {
-  switch (filterName) {
-    case `all`:
-      toggleVisuallity(`films`);
-      return cards;
-    case `watchlist`:
-      toggleVisuallity(`films`);
-      return cards.filter((card) => card.state.isListed);
-    case `history`:
-      toggleVisuallity(`films`);
-      return cards.filter((card) => card.state.isWatched);
-    case `stats`:
-      toggleVisuallity(`statistic`);
+api.getFilms()
+  .then((films) => {
+    renderCards(films, cardsContainer)
+  });
 
-  }
-  return 0;
-};
-
+// const chart = new Statistic(initialCards);
+//
+// const filterCards = (cards, filterName) => {
+//   switch (filterName) {
+//     case `all`:
+//       toggleVisuallity(`films`);
+//       return cards;
+//     case `watchlist`:
+//       toggleVisuallity(`films`);
+//       return cards.filter((card) => card.state.isListed);
+//     case `history`:
+//       toggleVisuallity(`films`);
+//       return cards.filter((card) => card.state.isWatched);
+//     case `stats`:
+//       toggleVisuallity(`statistic`);
+//
+//   }
+//   return 0;
+// };
+//
 const renderCards = (films) => {
   cardsContainer.innerHTML = ``;
 
@@ -62,20 +72,23 @@ const renderCards = (films) => {
       if (film.state.isListed) {
         film.state.isListed = !film.state.isListed;
       }
-      chart.unrender();
-      chart.update(films);
-      popup.update(film);
-      renderChart(chart);
+      // chart.unrender();
+      // chart.update(films);
+      // popup.update(film);
+      // renderChart(chart);
     };
 
     popup.onClick = () => {
       popup.unrender();
     };
 
-    popup.onChange = (newObject) => {
-      film.yourScore = newObject;
-      popup.update(film);
-      popup.unrender();
+    popup.onChange = (newScore) => {
+      film.yourScore = newScore;
+      api.updateFilm({id: film.id, data: film.toRAW()})
+      .then((newFilm) => {
+        popup.update(newFilm);
+        popup.unrender();
+      })
     };
 
     popup.onEnter = (newComments) => {
@@ -91,26 +104,28 @@ const renderCards = (films) => {
   }
 };
 
-const renderFilters = (filters) => {
-  filterContainer.innerHTML = ``;
-
-  filters.forEach((item) => {
-    const filter = new Filter(item);
-
-    filter.onFilter = (anchor) => {
-      const filteredCards = filterCards(initialCards, anchor);
-      renderCards(filteredCards, cardsContainer);
-    };
-
-    filterContainer.appendChild(filter.render());
-  });
-};
-
-const renderChart = (stat) => {
-  mainContainer.appendChild(stat.render());
-  stat.chartView();
-};
-
-renderFilters(initialFilters, filterContainer);
-renderCards(initialCards, cardsContainer);
-renderChart(chart);
+// const renderFilters = (filters) => {
+//   filterContainer.innerHTML = ``;
+//
+//   filters.forEach((item) => {
+//     const filter = new Filter(item);
+//
+//     filter.onFilter = (anchor) => {
+//       const filteredCards = filterCards(initialCards, anchor);
+//       renderCards(filteredCards, cardsContainer);
+//     };
+//
+//     filterContainer.appendChild(filter.render());
+//   });
+// };
+//
+// const renderChart = (stat) => {
+//   mainContainer.appendChild(stat.render());
+//   stat.chartView();
+// };
+//
+// renderFilters(initialFilters, filterContainer);
+//
+//
+// renderCards(initialCards, cardsContainer);
+// renderChart(chart);

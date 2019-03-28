@@ -5,15 +5,22 @@ export class FilmPopup extends Component {
 
   constructor(data) {
     super();
+    this._id = data.id;
     this._title = data.title;
+    this._alternative = data.alternative;
     this._rating = data.rating;
+    this._age = data.age;
     this._yourScore = data.yourScore;
+    this._director = data.director;
+    this._writers = data.writers;
+    this._actors = data.actors;
     this._year = data.year;
+    this._country = data.country;
     this._duration = data.duration;
-    this._genre = data.genre;
+    this._genres = data.genre;
     this._poster = data.poster;
     this._description = data.description;
-    this._commtens = data.comments;
+    this._comments = data.comments;
     this._element = null;
 
     this._state = {
@@ -28,6 +35,7 @@ export class FilmPopup extends Component {
 
     this._onCloseButtonClick = this._onCloseButtonClick.bind(this);
     this._onChangeScore = this._onChangeScore.bind(this);
+
   }
 
   get template() {
@@ -39,14 +47,14 @@ export class FilmPopup extends Component {
         <div class="film-details__info-wrap">
           <div class="film-details__poster">
             <img class="film-details__poster-img" src="${this._poster}" alt="${this._title}">
-            <p class="film-details__age">18+</p>
+            <p class="film-details__age">${this._age}+</p>
           </div>
 
           <div class="film-details__info">
             <div class="film-details__info-head">
               <div class="film-details__title-wrap">
                 <h3 class="film-details__title">${this._title}</h3>
-                <p class="film-details__title-original">Original: ${this._title}</p>
+                <p class="film-details__title-original">Original: ${this._alternative}</p>
               </div>
 
               <div class="film-details__rating">
@@ -58,34 +66,33 @@ export class FilmPopup extends Component {
             <table class="film-details__table">
               <tr class="film-details__row">
                 <td class="film-details__term">Director</td>
-                <td class="film-details__cell">Brad Bird</td>
+                <td class="film-details__cell">${this._director}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Writers</td>
-                <td class="film-details__cell">Brad Bird</td>
+                <td class="film-details__cell">${this._writers.join(`, `)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Actors</td>
-                <td class="film-details__cell">Samuel L. Jackson, Catherine Keener, Sophia Bush</td>
+                <td class="film-details__cell">${this._actors.join(`, `)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Release Date</td>
-                <td class="film-details__cell">${moment(this._year).format(`DD MMMM YYYY`)} (USA)</td>
+                <td class="film-details__cell">${moment(this._year).format(`DD MMMM YYYY`)} (${this._country})</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Runtime</td>
-                <td class="film-details__cell"> ${moment.duration(this._duration).as(`minutes`)} min</td>
+                <td class="film-details__cell"> ${this._duration} min</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Country</td>
-                <td class="film-details__cell">USA</td>
+                <td class="film-details__cell">${this._country}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Genres</td>
                 <td class="film-details__cell">
-                  <span class="film-details__genre">Animation</span>
-                  <span class="film-details__genre">Action</span>
-                  <span class="film-details__genre">Adventure</span></td>
+                  ${this._genres.map((genre) => `<span class="film-details__genre">${genre}</span>`.trim()).join(``)}
+                </td>
               </tr>
             </table>
 
@@ -107,13 +114,12 @@ export class FilmPopup extends Component {
         </section>
 
         <section class="film-details__comments-wrap">
-        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${this._commtens.length}</span></h3>
+        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${this._comments.length}</span></h3>
 
         <ul class="film-details__comments-list">
           ${this._commentsMarkdown()}
         </ul>
-
-          <div class="film-details__new-comment">
+        <div class="film-details__new-comment">
         <div>
           <label for="add-emoji" class="film-details__add-emoji-label">😐</label>
           <input type="checkbox" class="film-details__add-emoji visually-hidden" id="add-emoji">
@@ -137,7 +143,7 @@ export class FilmPopup extends Component {
 
         <section class="film-details__user-rating-wrap">
           <div class="film-details__user-rating-controls">
-            <span class="film-details__watched-status film-details__watched-status--active">Already watched</span>
+            <span class="film-details__watched-status ${this._state.isWatched ? `film-details__watched-status--active` : ``} "> Already watched</span>
             <button class="film-details__watched-reset" type="button">undo</button>
           </div>
 
@@ -191,8 +197,10 @@ export class FilmPopup extends Component {
   }
 
   update(data) {
-    this._state = data.state;
-    this._yourScore = parseInt(data.yourScore, 10);
+    this._state.isListed = data.user_details.watchlist;
+    this._state.isWatched = data.user_details.already_watched;
+    this._state.isFavorite = data.user_details.favorite;
+    this._yourScore = data.user_details.personal_rating;
     this._comments = data.comments;
   }
 
@@ -240,18 +248,18 @@ export class FilmPopup extends Component {
 
   _commentsMarkdown() {
     let commentMarkdown = ``;
-    this._commtens.forEach((comment) => {
+    this._comments.forEach((comment) => {
       commentMarkdown += `
-              <li class="film-details__comment">
-                <span class="film-details__comment-emoji">${comment.icon}</span>
-                <div>
-                  <p class="film-details__comment-text">${comment.text}</p>
-                  <p class="film-details__comment-info">
-                    <span class="film-details__comment-author">${comment.author}</span>
-                    <span class="film-details__comment-day">${moment().to(comment.date)}</span>
-                  </p>
-                </div>
-              </li>`;
+        <li class="film-details__comment">
+          <span class="film-details__comment-emoji">${comment.emotion}</span>
+            <div>
+              <p class="film-details__comment-text">${comment.comment}</p>
+              <p class="film-details__comment-info">
+                <span class="film-details__comment-author">${comment.author}</span>
+                <span class="film-details__comment-day">${moment().to(comment.date)}</span>
+              </p>
+            </div>
+          </li>`;
     });
     return commentMarkdown;
   }
