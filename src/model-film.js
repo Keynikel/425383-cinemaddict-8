@@ -42,7 +42,8 @@ export class ModelFilm {
         'favorite': this.state.isFavorite,
         'personal_rating': this.yourScore,
         'watchlist': this.state.isListed
-      }
+      },
+      'comments': this.comments
     };
   }
 

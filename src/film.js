@@ -64,10 +64,11 @@ export class Film extends Component {
   }
 
   update(data) {
-    this._state.isListed = data.state.isListed;
-    this._state.isWatched = data.state.isWatched;
-    this._state.isFavorite = data.state.isFavorite;
+    this._state.isListed = data.user_details.watchlist;
+    this._state.isWatched = data.user_details.already_watched;
+    this._state.isFavorite = data.user_details.favorite;
     this._comments = data.comments;
+    this._element.querySelector(`.film-card__comments`).innerHTML = this._comments.length + ` comments`;
   }
 
   _onCommentsLinkClick() {

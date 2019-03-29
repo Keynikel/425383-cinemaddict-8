@@ -185,9 +185,9 @@ export class FilmPopup extends Component {
 
   _onTextareaEnter() {
     let comment = {};
-    comment.icon = this._element.querySelector(`.film-details__add-emoji-label`).innerHTML;
-    comment.text = this._element.querySelector(`.film-details__comment-input`).value;
     comment.author = `Olika Kell`;
+    comment.emotion = this._element.querySelector(`.film-details__emoji-item:checked`).getAttribute(`value`);
+    comment.comment = this._element.querySelector(`.film-details__comment-input`).value;
     comment.date = moment().format();
     return typeof this._onEnter === `function` && this._onEnter(comment);
   }
@@ -222,10 +222,10 @@ export class FilmPopup extends Component {
         }
       });
 
-    let icons = this._element.querySelectorAll(`.film-details__emoji-label`);
+    let icons = this._element.querySelectorAll(`.film-details__emoji-item`);
     icons.forEach(
-        (icon) => icon.addEventListener(`click`, () =>
-          this._changeIconMarkdown(icon.innerHTML)
+        (icon) => icon.addEventListener(`change`, () =>
+          this._changeIconMarkdown(icon.getAttribute(`value`))
         )
     );
   }
@@ -247,11 +247,16 @@ export class FilmPopup extends Component {
   }
 
   _commentsMarkdown() {
+    const toEmoji = require(`emoji-name-map`);
     let commentMarkdown = ``;
+
     this._comments.forEach((comment) => {
+      let emojiText = comment.emotion;
+      emojiText = emojiText.replace(/\-/gi, `_`);
+
       commentMarkdown += `
         <li class="film-details__comment">
-          <span class="film-details__comment-emoji">${comment.emotion}</span>
+          <span class="film-details__comment-emoji">${toEmoji.get(`:${emojiText}:`)}</span>
             <div>
               <p class="film-details__comment-text">${comment.comment}</p>
               <p class="film-details__comment-info">
@@ -265,7 +270,9 @@ export class FilmPopup extends Component {
   }
 
   _changeIconMarkdown(icon) {
+    const toEmoji = require(`emoji-name-map`);
+    icon = icon.replace(/\-/gi, `_`);
     const iconContainer = this._element.querySelector(`.film-details__add-emoji-label`);
-    iconContainer.innerHTML = icon;
+    iconContainer.innerHTML = toEmoji.get(`:${icon}:`);
   }
 }

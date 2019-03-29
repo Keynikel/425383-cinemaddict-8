@@ -25,7 +25,12 @@ const initialFilters = getFilters();
 
 api.getFilms()
   .then((films) => {
-    renderCards(films, cardsContainer)
+    renderCards(films, cardsContainer);
+  })
+  .catch((err) => {
+    const error = `<div>Something went wrong while loading movies. Check your connection or try again later</div>`;
+    cardsContainer.innerHTML = error;
+    console.log(err);
   });
 
 // const chart = new Statistic(initialCards);
@@ -84,24 +89,61 @@ const renderCards = (films) => {
 
     popup.onChange = (newScore) => {
       film.yourScore = newScore;
+
+      const block = () => {
+        const scoreButtons = popup._element.querySelectorAll(`.film-details__user-rating-input`);
+        scoreButtons.forEach(
+            (button) => {
+              button.disabled = true;
+            }
+        );
+      };
+
+      const unblock = () => {
+        const scoreButtons = popup._element.querySelectorAll(`.film-details__user-rating-input`);
+        scoreButtons.forEach(
+            (button) => {
+              button.disabled = false;
+            }
+        );
+      };
+
+      block();
+      load(tr)
+      .then(() => {
+        console.log(`yep`);
+       })
+   .catch(() => {
+     console.log(`nope`);
+     unblock()
+   });
       api.updateFilm({id: film.id, data: film.toRAW()})
       .then((newFilm) => {
         popup.update(newFilm);
-        popup.unrender();
-      })
+      //  popup.unrender();
+      });
     };
 
     popup.onEnter = (newComments) => {
       film.comments.push(newComments);
-      popup.update(film);
-      card.update(film);
-      card.unrender();
-      cardsContainer.appendChild(card.render());
-      popup.unrender();
+      api.updateFilm({id: film.id, data: film.toRAW()})
+      .then((newFilm) => {
+        popup.update(newFilm);
+        card.update(newFilm);
+        popup.unrender();
+      });
+
+
     };
 
     cardsContainer.appendChild(card.render());
   }
+};
+
+const load = (isSuccess) => {
+  return new Promise((res, rej) => {
+    setTimeout(isSuccess ? res : rej, 2000);
+  });
 };
 
 // const renderFilters = (filters) => {
