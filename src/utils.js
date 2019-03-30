@@ -30,3 +30,12 @@ export const toggleVisuallity = (classToShow) => {
       break;
   }
 };
+
+export const shake = (element) => {
+  const ANIMATION_TIMEOUT = 600;
+  element.style.animation = `shake ${ANIMATION_TIMEOUT / 1000}s`;
+
+  setTimeout(() => {
+    element.style.animation = ``;
+  }, ANIMATION_TIMEOUT);
+};

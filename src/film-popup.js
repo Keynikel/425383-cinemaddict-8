@@ -204,6 +204,19 @@ export class FilmPopup extends Component {
     this._comments = data.comments;
   }
 
+  updateComments() {
+    const commentsCounter = this._element.querySelector(`.film-details__comments-count`);
+    const commentsContainer = this._element.querySelector(`.film-details__comments-list`);
+    const commentsList = this._commentsMarkdown();
+    commentsCounter.innerHTML = this._comments.length;
+    commentsContainer.innerHTML = commentsList;
+  }
+
+  updateUserScore() {
+    const scoreContainer = this._element.querySelector(`.film-details__user-rating`);
+    scoreContainer.innerHTML = `Your rate ${this._yourScore}`;
+  }
+
   createListeners() {
     this._element.querySelector(`.film-details__close-btn`)
         .addEventListener(`click`, this._onCloseButtonClick);

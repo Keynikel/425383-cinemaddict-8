@@ -1,7 +1,7 @@
 /* Импорты */
 import {getFilm} from './get-film.js';
 import {getFilters} from './get-filter.js';
-import {toggleVisuallity} from './utils.js';
+import {toggleVisuallity, shake} from './utils.js';
 import {Filter} from './filter.js';
 import {Film} from './film.js';
 import {FilmPopup} from './film-popup.js';
@@ -18,20 +18,10 @@ const cardsContainer = document.querySelector(`.films-list .films-list__containe
 const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=${Math.random()}`;
 const END_POINT = ` https://es8-demo-srv.appspot.com/moowle/`;
 const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
+const START_STRING = `Loading movies...`;
 
 
-
-const initialFilters = getFilters();
-
-api.getFilms()
-  .then((films) => {
-    renderCards(films, cardsContainer);
-  })
-  .catch((err) => {
-    const error = `<div>Something went wrong while loading movies. Check your connection or try again later</div>`;
-    cardsContainer.innerHTML = error;
-    console.log(err);
-  });
+// const initialFilters = getFilters();
 
 // const chart = new Statistic(initialCards);
 //
@@ -52,7 +42,7 @@ api.getFilms()
 //   }
 //   return 0;
 // };
-//
+
 const renderCards = (films) => {
   cardsContainer.innerHTML = ``;
 
@@ -94,7 +84,9 @@ const renderCards = (films) => {
         const scoreButtons = popup._element.querySelectorAll(`.film-details__user-rating-input`);
         scoreButtons.forEach(
             (button) => {
+              const label = button.nextElementSibling;
               button.disabled = true;
+              label.style.background = `#979797`;
             }
         );
       };
@@ -103,64 +95,103 @@ const renderCards = (films) => {
         const scoreButtons = popup._element.querySelectorAll(`.film-details__user-rating-input`);
         scoreButtons.forEach(
             (button) => {
+              const label = button.nextSibling.nextSibling;
               button.disabled = false;
+              if (button.checked) {
+                label.style.background = `#ffe800`;
+              } else {
+                label.style.background = `#d8d8d8`;
+              }
+
+            }
+        );
+      };
+
+      const error = () => {
+        const scoreButtons = popup._element.querySelectorAll(`.film-details__user-rating-input`);
+        scoreButtons.forEach(
+            (button) => {
+              const label = button.nextSibling.nextSibling;
+              button.disabled = false;
+              if (button.checked) {
+                label.style.background = `red`;
+                shake(label);
+              } else {
+                label.style.background = `#d8d8d8`;
+              }
+
             }
         );
       };
 
       block();
-      load(tr)
-      .then(() => {
-        console.log(`yep`);
-       })
-   .catch(() => {
-     console.log(`nope`);
-     unblock()
-   });
       api.updateFilm({id: film.id, data: film.toRAW()})
       .then((newFilm) => {
         popup.update(newFilm);
-      //  popup.unrender();
-      });
+        popup.updateUserScore();
+        unblock();
+      })
+     .catch(() => {
+       error();
+     });
     };
 
     popup.onEnter = (newComments) => {
       film.comments.push(newComments);
+
+      const block = () => {
+        const inputField = popup._element.querySelector(`.film-details__comment-input`);
+        inputField.disabled = true;
+        inputField.style.border = `1px solid #979797`;
+        inputField.style.background = `#979797`;
+      };
+
+      const unblock = () => {
+        const inputField = popup._element.querySelector(`.film-details__comment-input`);
+        inputField.disabled = false;
+        inputField.style.background = `#f6f6f6`;
+        inputField.value = ``;
+      };
+
+      const error = () => {
+        const inputField = popup._element.querySelector(`.film-details__comment-input`);
+        shake(inputField);
+        inputField.disabled = false;
+        inputField.style.background = `#f6f6f6`;
+        inputField.style.border = `1px solid red`;
+      };
+
+      block();
       api.updateFilm({id: film.id, data: film.toRAW()})
       .then((newFilm) => {
         popup.update(newFilm);
         card.update(newFilm);
-        popup.unrender();
+        popup.updateComments();
+        unblock();
+      })
+      .catch(() => {
+        error();
       });
-
-
     };
 
     cardsContainer.appendChild(card.render());
   }
 };
 
-const load = (isSuccess) => {
-  return new Promise((res, rej) => {
-    setTimeout(isSuccess ? res : rej, 2000);
-  });
-};
-
 // const renderFilters = (filters) => {
 //   filterContainer.innerHTML = ``;
-//
 //   filters.forEach((item) => {
 //     const filter = new Filter(item);
 //
 //     filter.onFilter = (anchor) => {
-//       const filteredCards = filterCards(initialCards, anchor);
+//       const filteredCards = filterCards(films, anchor);
 //       renderCards(filteredCards, cardsContainer);
 //     };
 //
 //     filterContainer.appendChild(filter.render());
 //   });
 // };
-//
+
 // const renderChart = (stat) => {
 //   mainContainer.appendChild(stat.render());
 //   stat.chartView();
@@ -171,3 +202,13 @@ const load = (isSuccess) => {
 //
 // renderCards(initialCards, cardsContainer);
 // renderChart(chart);
+
+cardsContainer.innerHTML = `<div>` + START_STRING + `</div>`;
+api.getFilms()
+  .then((films) => {
+    renderCards(films, cardsContainer);
+  })
+  .catch(() => {
+    const error = `<div>Something went wrong while loading movies. Check your connection or try again later</div>`;
+    cardsContainer.innerHTML = error;
+  });
