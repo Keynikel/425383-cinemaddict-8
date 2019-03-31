@@ -1,5 +1,4 @@
 /* Импорты */
-import {getFilm} from './get-film.js';
 import {getFilters} from './get-filter.js';
 import {toggleVisuallity, shake} from './utils.js';
 import {Filter} from './filter.js';
@@ -9,7 +8,6 @@ import {Statistic} from './statistic.js';
 import {API} from './api.js';
 
 /* Переменные */
-
 const bodyContainer = document.querySelector(`body`);
 const mainContainer = document.querySelector(`main`);
 const filterContainer = document.querySelector(`.main-navigation`);
@@ -17,34 +15,36 @@ const cardsContainer = document.querySelector(`.films-list .films-list__containe
 
 const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=${Math.random()}`;
 const END_POINT = ` https://es8-demo-srv.appspot.com/moowle/`;
-const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
 const START_STRING = `Loading movies...`;
+const ERROR_STRING = `Something went wrong while loading movies. Check your connection or try again later`;
 
+const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
 
-// const initialFilters = getFilters();
+const initialFilters = getFilters();
 
-// const chart = new Statistic(initialCards);
-//
-// const filterCards = (cards, filterName) => {
-//   switch (filterName) {
-//     case `all`:
-//       toggleVisuallity(`films`);
-//       return cards;
-//     case `watchlist`:
-//       toggleVisuallity(`films`);
-//       return cards.filter((card) => card.state.isListed);
-//     case `history`:
-//       toggleVisuallity(`films`);
-//       return cards.filter((card) => card.state.isWatched);
-//     case `stats`:
-//       toggleVisuallity(`statistic`);
-//
-//   }
-//   return 0;
-// };
+const filterCards = (cards, filterName) => {
+  switch (filterName) {
+    case `all`:
+      toggleVisuallity(`films`);
+      return cards;
+    case `watchlist`:
+      toggleVisuallity(`films`);
+      return cards.filter((card) => card.state.isListed);
+    case `history`:
+      toggleVisuallity(`films`);
+      return cards.filter((card) => card.state.isWatched);
+    case `stats`:
+      toggleVisuallity(`statistic`);
+      return cards;
+
+  }
+  return 0;
+};
 
 const renderCards = (films) => {
   cardsContainer.innerHTML = ``;
+  const chart = new Statistic(films);
+  renderChart(chart);
 
   for (let i = 0; i < films.length; i++) {
     const film = films[i];
@@ -58,19 +58,87 @@ const renderCards = (films) => {
     card.onAddToWatchList = (evt) => {
       evt.preventDefault();
       film.state.isListed = !film.state.isListed;
-      popup.update(film);
+
+      const block = () => {
+        const userButtons = card._element.querySelectorAll(`.film-card__controls button`);
+        userButtons.forEach((button) => {
+          button.disabled = true;
+          button.style.opacity = `0.5`;
+        });
+      };
+
+      const unblock = () => {
+        const userButtons = card._element.querySelectorAll(`.film-card__controls button`);
+        userButtons.forEach((button) => {
+          button.disabled = false;
+          button.style.opacity = `1`;
+        });
+      };
+
+      const error = () => {
+        shake(card._element);
+        const userButtons = card._element.querySelectorAll(`.film-card__controls button`);
+        userButtons.forEach((button) => {
+          button.disabled = false;
+          button.style.opacity = `1`;
+        });
+      };
+
+      block();
+      api.updateFilm({id: film.id, data: film.toRAW()})
+      .then((newFilm) => {
+        popup.update(newFilm);
+        unblock();
+      })
+      .catch(() => {
+        error();
+      });
     };
 
     card.onMarkAsWatched = (evt) => {
       evt.preventDefault();
       film.state.isWatched = !film.state.isWatched;
-      if (film.state.isListed) {
+      if (film.state.isWatched && film.state.isListed) {
         film.state.isListed = !film.state.isListed;
       }
-      // chart.unrender();
-      // chart.update(films);
-      // popup.update(film);
-      // renderChart(chart);
+
+      const block = () => {
+        const userButtons = card._element.querySelectorAll(`.film-card__controls button`);
+        userButtons.forEach((button) => {
+          button.disabled = true;
+          button.style.opacity = `0.5`;
+        });
+      };
+
+      const unblock = () => {
+        const userButtons = card._element.querySelectorAll(`.film-card__controls button`);
+        userButtons.forEach((button) => {
+          button.disabled = false;
+          button.style.opacity = `1`;
+        });
+      };
+
+      const error = () => {
+        shake(card._element);
+        const userButtons = card._element.querySelectorAll(`.film-card__controls button`);
+        userButtons.forEach((button) => {
+          button.disabled = false;
+          button.style.opacity = `1`;
+        });
+      };
+
+      block();
+      api.updateFilm({id: film.id, data: film.toRAW()})
+      .then((newFilm) => {
+        chart.unrender();
+        popup.update(newFilm);
+        chart.update(films);
+        renderChart(chart);
+        unblock();
+      })
+      .catch(() => {
+        error();
+      });
     };
 
     popup.onClick = () => {
@@ -178,37 +246,35 @@ const renderCards = (films) => {
   }
 };
 
-// const renderFilters = (filters) => {
-//   filterContainer.innerHTML = ``;
-//   filters.forEach((item) => {
-//     const filter = new Filter(item);
-//
-//     filter.onFilter = (anchor) => {
-//       const filteredCards = filterCards(films, anchor);
-//       renderCards(filteredCards, cardsContainer);
-//     };
-//
-//     filterContainer.appendChild(filter.render());
-//   });
-// };
+const renderFilters = (filters, films) => {
+  filterContainer.innerHTML = ``;
+  filters.forEach((item) => {
+    const filter = new Filter(item);
 
-// const renderChart = (stat) => {
-//   mainContainer.appendChild(stat.render());
-//   stat.chartView();
-// };
-//
-// renderFilters(initialFilters, filterContainer);
-//
-//
-// renderCards(initialCards, cardsContainer);
-// renderChart(chart);
+    filter.onFilter = (anchor) => {
+      const filteredCards = filterCards(films, anchor);
+      renderCards(filteredCards, cardsContainer);
+    };
 
-cardsContainer.innerHTML = `<div>` + START_STRING + `</div>`;
+    filterContainer.appendChild(filter.render());
+  });
+};
+
+const renderChart = (stat) => {
+  mainContainer.appendChild(stat.render());
+  stat.chartView();
+};
+
+cardsContainer.innerHTML = `<div>${START_STRING}</div>`;
 api.getFilms()
+  .then((filmsList) => {
+    renderFilters(initialFilters, filmsList);
+    return filmsList;
+  })
   .then((films) => {
     renderCards(films, cardsContainer);
   })
   .catch(() => {
-    const error = `<div>Something went wrong while loading movies. Check your connection or try again later</div>`;
+    const error = `<div>${ERROR_STRING}</div>`;
     cardsContainer.innerHTML = error;
   });
