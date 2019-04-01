@@ -41,11 +41,8 @@ const filterCards = (cards, filterName) => {
   return 0;
 };
 
-const renderCards = (films) => {
-  cardsContainer.innerHTML = ``;
-  const chart = new Statistic(films);
-  renderChart(chart);
-
+const renderCards = (films, chart) => {
+  cardsContainer.textContent = ``;
   for (let i = 0; i < films.length; i++) {
     const film = films[i];
     const card = new Film(film);
@@ -246,14 +243,14 @@ const renderCards = (films) => {
   }
 };
 
-const renderFilters = (filters, films) => {
-  filterContainer.innerHTML = ``;
+const renderFilters = (filters, films, chart) => {
+  filterContainer.textContent = ``;
   filters.forEach((item) => {
     const filter = new Filter(item);
 
     filter.onFilter = (anchor) => {
       const filteredCards = filterCards(films, anchor);
-      renderCards(filteredCards, cardsContainer);
+      renderCards(filteredCards, chart);
     };
 
     filterContainer.appendChild(filter.render());
@@ -267,12 +264,12 @@ const renderChart = (stat) => {
 
 cardsContainer.innerHTML = `<div>${START_STRING}</div>`;
 api.getFilms()
-  .then((filmsList) => {
-    renderFilters(initialFilters, filmsList);
-    return filmsList;
-  })
   .then((films) => {
-    renderCards(films, cardsContainer);
+    const chart = new Statistic(films);
+    renderFilters(initialFilters, films, chart);
+    renderChart(chart);
+    renderCards(films, chart);
+
   })
   .catch(() => {
     const error = `<div>${ERROR_STRING}</div>`;
