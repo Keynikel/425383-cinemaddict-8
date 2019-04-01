@@ -34,10 +34,10 @@ export class Film extends Component {
         <p class="film-card__info">
           <span class="film-card__year">${moment(this._year).format(`YYYY`)}</span>
           <span class="film-card__duration">
-            ${moment.duration(this._duration).hours()}h
-            ${moment.duration(this._duration).minutes()}min
+             ${moment.duration(this._duration, `minutes`).hours()}h
+             ${moment.duration(this._duration, `minutes`).minutes()}min
           </span>
-          <span class="film-card__genre">${this._genre}</span>
+          <span class="film-card__genre">${this._genre.length ? this._genre[0] : ``}</span>
         </p>
         <img src="${this._poster}" alt="" class="film-card__poster">
         <p class="film-card__description">${this._description}</p>
@@ -64,10 +64,11 @@ export class Film extends Component {
   }
 
   update(data) {
-    this._state.isListed = data.state.isListed;
-    this._state.isWatched = data.state.isWatched;
-    this._state.isFavorite = data.state.isFavorite;
+    this._state.isListed = data.user_details.watchlist;
+    this._state.isWatched = data.user_details.already_watched;
+    this._state.isFavorite = data.user_details.favorite;
     this._comments = data.comments;
+    this._element.querySelector(`.film-card__comments`).innerHTML = this._comments.length + ` comments`;
   }
 
   _onCommentsLinkClick() {

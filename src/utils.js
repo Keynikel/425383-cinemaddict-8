@@ -1,15 +1,16 @@
-export const clearField = function (container) {
-  while (container.firstChild) {
-    container.firstChild.remove();
-  }
-};
-
-export const getRandomNumber = (min, max) => min - 0.5 + Math.random() * (max - min + 1);
-
 export const createElement = (template) => {
   const newElement = document.createElement(`div`);
   newElement.innerHTML = template;
   return newElement.firstChild;
+};
+
+export const shake = (element) => {
+  const ANIMATION_TIMEOUT = 600;
+  element.style.animation = `shake ${ANIMATION_TIMEOUT / 1000}s`;
+
+  setTimeout(() => {
+    element.style.animation = ``;
+  }, ANIMATION_TIMEOUT);
 };
 
 export const toggleVisuallity = (classToShow) => {

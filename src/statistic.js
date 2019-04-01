@@ -65,11 +65,11 @@ export class Statistic extends Component {
     const result = {};
     Object.values(data).forEach((it) => {
       if (it.state.isWatched) {
-        duration = moment.duration(duration).add(moment.duration(it.duration));
+        duration += it.duration;
       }
     });
-    result.hours = duration._data.hours;
-    result.minutes = duration._data.minutes;
+    result.hours = moment.duration(duration, `minutes`).hours();
+    result.minutes = moment.duration(duration, `minutes`).minutes();
     return result;
   }
 
