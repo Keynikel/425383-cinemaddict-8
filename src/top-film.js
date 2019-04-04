@@ -1,21 +1,9 @@
-import {Component} from './component';
+import {Film} from './film';
 let moment = require(`moment`);
 
-export class TopFilm extends Component {
+export class TopFilm extends Film {
   constructor(data) {
     super(data);
-    this._title = data.title;
-    this._rating = data.rating;
-    this._year = data.year;
-    this._duration = data.duration;
-    this._genre = data.genre;
-    this._poster = data.poster;
-    this._description = data.description;
-    this._commtens = data.comments;
-    this._element = null;
-
-    this._onClick = null;
-    this._onCommentsLinkClick = this._onCommentsLinkClick.bind(this);
   }
 
   get template() {
@@ -35,14 +23,6 @@ export class TopFilm extends Component {
 
         <button class="film-card__comments">${this._commtens.length} comments </button>
       </article>`.trim();
-  }
-
-  set onClick(fn) {
-    this._onClick = fn;
-  }
-
-  _onCommentsLinkClick() {
-    return typeof this._onClick === `function` && this._onClick();
   }
 
   createListeners() {

@@ -34,6 +34,9 @@ export class FilmPopup extends Component {
     this._onEnter = null;
 
     this._onCloseButtonClick = this._onCloseButtonClick.bind(this);
+    this._onAddToWatchList = this._onAddToWatchList.bind(this);
+    this._onAddToWatched = this._onAddToWatched.bind(this);
+    this._onAddToFavorite = this._onAddToFavorite.bind(this);
     this._onChangeScore = this._onChangeScore.bind(this);
 
   }
@@ -171,12 +174,39 @@ export class FilmPopup extends Component {
     this._onClick = fn;
   }
 
+  set onAddToWatchList(fn) {
+    this._onAddToWatchList = fn;
+  }
+
+  set onAddToWatched(fn) {
+    this._onAddToWatched = fn;
+  }
+
+  set onAddToFavorite(fn) {
+    this._onAddToFavorite = fn;
+  }
+
   set onChange(fn) {
     this._onChange = fn;
   }
 
   set onEnter(fn) {
     this._onEnter = fn;
+  }
+
+  _onAddToWatchList(evt) {
+    evt.preventDefault();
+    return typeof this._onAddToWatchList === `function` && this._onAddToWatchList();
+  }
+
+  _onAddToWatched(evt) {
+    evt.preventDefault();
+    return typeof this._onAddToWatched === `function` && this._onAddToWatched();
+  }
+
+  _onAddToFavorite(evt) {
+    evt.preventDefault();
+    return typeof this._onAddToFavorite === `function` && this._onAddToFavorite();
   }
 
   _onChangeScore(value) {
@@ -217,9 +247,47 @@ export class FilmPopup extends Component {
     scoreContainer.textContent = `Your rate ${this._yourScore}`;
   }
 
+  updateFilmDetails(state) {
+    const detalisContainer = this._element.querySelector(`.film-details__controls`);
+    let checkField = ``;
+    let newCheckField = ``;
+
+    switch (state) {
+      case `listed`:
+        checkField = detalisContainer.querySelector(`#watchlist`);
+        newCheckField = document.createElement(`div`);
+        newCheckField.innerHTML = `<input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${this._state.isListed ? `checked` : ``}>`;
+        break;
+      case `watched`:
+        checkField = detalisContainer.querySelector(`#watchlist`);
+        newCheckField = document.createElement(`div`);
+        newCheckField.innerHTML = `<input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${this._state.isListed ? `checked` : ``}>`;
+        detalisContainer.replaceChild(newCheckField.firstChild, checkField);
+        checkField = detalisContainer.querySelector(`#watched`);
+        newCheckField = document.createElement(`div`);
+        newCheckField.innerHTML = `<input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${this._state.isWatched ? `checked` : ``}>`;
+        break;
+      case `favorite`:
+        checkField = detalisContainer.querySelector(`#favorite`);
+        newCheckField = document.createElement(`div`);
+        newCheckField.innerHTML = `<input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${this._state.isFavorite ? `checked` : ``}>`;
+        break;
+    }
+    detalisContainer.replaceChild(newCheckField.firstChild, checkField);
+  }
+
   createListeners() {
     this._element.querySelector(`.film-details__close-btn`)
         .addEventListener(`click`, this._onCloseButtonClick);
+
+    this._element.querySelector(`.film-details__control-label--watchlist`)
+      .addEventListener(`click`, this._onAddToWatchList);
+
+    this._element.querySelector(`.film-details__control-label--watched`)
+      .addEventListener(`click`, this._onAddToWatched);
+
+    this._element.querySelector(`.film-details__control-label--favorite`)
+      .addEventListener(`click`, this._onAddToFavorite);
 
     let scores = this._element.querySelectorAll(`.film-details__user-rating-input`);
     scores.forEach(
@@ -246,6 +314,15 @@ export class FilmPopup extends Component {
   removeListeners() {
     this._element.querySelector(`.film-details__close-btn`)
         .removeEventListener(`click`, this._onCloseButtonClick);
+
+    this._element.querySelector(`.film-details__control-label--watchlist`)
+      .removeEventListener(`click`, this._onAddToWatchList);
+
+    this._element.querySelector(`.film-details__control-label--watched`)
+      .removeEventListener(`click`, this._onAddToWatched);
+
+    this._element.querySelector(`.film-details__control-label--favorite`)
+      .addEventListener(`click`, this._onAddToFavorite);
   }
 
   _raitingScoreMarkdown() {
