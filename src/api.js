@@ -25,6 +25,11 @@ export const API = class {
     this._authorization = authorization;
   }
 
+  getFilmsCount() {
+    return this._load({url: `movies`})
+    .then(toJSON)
+  }
+
   getFilms(count) {
     return this._load({url: `movies`})
     .then(toJSON)

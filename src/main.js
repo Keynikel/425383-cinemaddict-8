@@ -44,6 +44,22 @@ const showCards = () => {
     });
 };
 
+const renderUserStatus = (films) => {
+  const userStatusContainer = document.querySelector(`.profile__rating`);
+  const watchedFilmsCount = films.filter((film) => film.user_details.already_watched).length;
+  let status = ``;
+  if (watchedFilmsCount <= 10) {
+    status = `novice`;
+  } else {
+    if (watchedFilmsCount > 10 && watchedFilmsCount <= 20) {
+      status = `fan`;
+    } else {
+      status = `movie buff`;
+    }
+  }
+  userStatusContainer.innerHTML = status;
+};
+
 const renderCardAndPopup = (card, film, popup) => {
   card.onClick = () => {
     bodyContainer.appendChild(popup.render());
@@ -149,6 +165,20 @@ const renderCardAndPopup = (card, film, popup) => {
       error();
     });
   };
+
+  popup.onDelete = () => {
+    film.comments.pop();
+    api.updateFilm({id: film.id, data: film.toRAW()})
+    .then((newFilm) => {
+      popup.update(newFilm);
+      card.update(newFilm);
+      popup.updateComments();
+      popup.updateCommentsControls();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  }
 };
 
 const filterCards = (cards, filterName) => {
@@ -264,6 +294,10 @@ const renderCards = (films, chart) => {
         renderChart(chart);
         unblock();
       })
+      .then(api.getFilmsCount()
+        .then((responce) => {
+          renderUserStatus(responce);
+        }))
       .catch(() => {
         error();
       });
@@ -393,3 +427,10 @@ const renderChart = (stat) => {
 cardsContainer.innerHTML = `<div>${START_STRING}</div>`;
 showCards();
 showMoreButton.addEventListener(`click`, showCards);
+
+const filmsCountContainer = document.querySelector(`.footer__statistics p`);
+api.getFilmsCount()
+  .then((responce) => {
+    renderUserStatus(responce);
+    filmsCountContainer.innerHTML = `${responce.length} movies inside`;
+  });

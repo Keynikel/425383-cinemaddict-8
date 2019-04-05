@@ -32,12 +32,14 @@ export class FilmPopup extends Component {
     this._onChange = null;
     this._onClick = null;
     this._onEnter = null;
+    this._onDelete = null;
 
     this._onCloseButtonClick = this._onCloseButtonClick.bind(this);
     this._onAddToWatchList = this._onAddToWatchList.bind(this);
     this._onAddToWatched = this._onAddToWatched.bind(this);
     this._onAddToFavorite = this._onAddToFavorite.bind(this);
     this._onChangeScore = this._onChangeScore.bind(this);
+    this._onDeleteLastComment = this._onDeleteLastComment.bind(this);
 
   }
 
@@ -145,8 +147,8 @@ export class FilmPopup extends Component {
         </section>
 
         <section class="film-details__user-rating-wrap">
-          <div class="film-details__user-rating-controls">
-            <span class="film-details__watched-status ${this._state.isWatched ? `film-details__watched-status--active` : ``} "> Already watched</span>
+          <div class="film-details__user-rating-controls visually-hidden">
+            <span class="film-details__watched-status ${this._state.isWatched ? `film-details__watched-status--active` : ``} "> ${this._filmStatusText()} </span>
             <button class="film-details__watched-reset" type="button">undo</button>
           </div>
 
@@ -186,6 +188,10 @@ export class FilmPopup extends Component {
     this._onAddToFavorite = fn;
   }
 
+  set onDelete(fn) {
+    this._onDelete = fn;
+  }
+
   set onChange(fn) {
     this._onChange = fn;
   }
@@ -202,6 +208,10 @@ export class FilmPopup extends Component {
   _onAddToWatched(evt) {
     evt.preventDefault();
     return typeof this._onAddToWatched === `function` && this._onAddToWatched();
+  }
+
+  _onDeleteLastComment() {
+    return typeof this._onDelete === `function` && this._onDelete();
   }
 
   _onAddToFavorite(evt) {
@@ -235,9 +245,11 @@ export class FilmPopup extends Component {
   }
 
   updateComments() {
+    const raitingControlsContainer = this._element.querySelector(`.film-details__user-rating-controls`);
     const commentsCounter = this._element.querySelector(`.film-details__comments-count`);
     const commentsContainer = this._element.querySelector(`.film-details__comments-list`);
     const commentsList = this._commentsMarkdown();
+    raitingControlsContainer.classList.remove(`visually-hidden`);
     commentsCounter.textContent = this._comments.length;
     commentsContainer.innerHTML = commentsList;
   }
@@ -249,6 +261,8 @@ export class FilmPopup extends Component {
 
   updateFilmDetails(state) {
     const detalisContainer = this._element.querySelector(`.film-details__controls`);
+    const statusContainer = this._element.querySelector(`.film-details__watched-status`);
+    const filmStatusContainer = this._element.querySelector(`.film-details__watched-status`);
     let checkField = ``;
     let newCheckField = ``;
 
@@ -273,7 +287,19 @@ export class FilmPopup extends Component {
         newCheckField.innerHTML = `<input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${this._state.isFavorite ? `checked` : ``}>`;
         break;
     }
+    statusContainer.innerHTML = status;
     detalisContainer.replaceChild(newCheckField.firstChild, checkField);
+    if (this._state.isWatched) {
+      filmStatusContainer.classList.add(`film-details__watched-status--active`);
+    } else {
+      filmStatusContainer.classList.remove(`film-details__watched-status--active`);
+    }
+    filmStatusContainer.innerHTML = this._filmStatusText();
+  }
+
+  updateCommentsControls() {
+    const raitingControlsContainer = this._element.querySelector(`.film-details__user-rating-controls`);
+    raitingControlsContainer.classList.add(`visually-hidden`);
   }
 
   createListeners() {
@@ -309,6 +335,9 @@ export class FilmPopup extends Component {
           this._changeIconMarkdown(icon.getAttribute(`value`))
         )
     );
+
+    this._element.querySelector(`.film-details__watched-reset`)
+      .addEventListener(`click`, this._onDeleteLastComment);
   }
 
   removeListeners() {
@@ -364,5 +393,17 @@ export class FilmPopup extends Component {
     icon = icon.replace(/\-/gi, `_`);
     const iconContainer = this._element.querySelector(`.film-details__add-emoji-label`);
     iconContainer.innerHTML = toEmoji.get(`:${icon}:`);
+  }
+
+  _filmStatusText() {
+    if (this._state.isWatched) {
+      return `Already watched`;
+    } else {
+      if (this._state.isListed) {
+        return `Will watch`;
+      } else {
+        return ``;
+      }
+    }
   }
 }
