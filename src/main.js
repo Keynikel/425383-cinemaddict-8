@@ -4,11 +4,20 @@ import {toggleVisuallity} from './utils.js';
 import * as view from './view-utils.js';
 import {Filter} from './filter.js';
 import {Search} from './search.js';
+import {ShowMoreButton} from './show-more.js';
 import {Film} from './film.js';
 import {TopFilm} from './top-film.js';
 import {FilmPopup} from './film-popup.js';
 import {Statistic} from './statistic.js';
 import {API} from './api.js';
+
+/* Глобальные константы */
+const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=${Math.random()}`;
+const END_POINT = ` https://es8-demo-srv.appspot.com/moowle/`;
+const START_STRING = `Loading movies...`;
+const ERROR_STRING = `Something went wrong while loading movies. Check your connection or try again later`;
+const FILMS_LOADING_STEP = 5;
+
 
 /* Переменные */
 const bodyContainer = document.querySelector(`body`);
@@ -16,21 +25,15 @@ const mainContainer = document.querySelector(`main`);
 const searchContainer = document.querySelector(`.header__search`);
 const filterContainer = document.querySelector(`.main-navigation`);
 const cardsContainer = document.querySelector(`.films-list .films-list__container `);
-const showMoreButton = document.querySelector(`.films-list__show-more`);
-
-const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=${Math.random()}`;
-const END_POINT = ` https://es8-demo-srv.appspot.com/moowle/`;
-const START_STRING = `Loading movies...`;
-const ERROR_STRING = `Something went wrong while loading movies. Check your connection or try again later`;
-const ALL_FILMS_COUNT = 20;
-const FILMS_LOADING_STEP = 5;
+const filmsCountContainer = document.querySelector(`.footer__statistics p`);
+const showMoreButton = new ShowMoreButton();
 const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
 const searchField = new Search();
 const initialFilters = getFilters();
-
 let cardsCount = 0;
 
-const showCards = () => {
+
+const showCards = (allCardsSount) => {
   cardsCount = cardsCount + FILMS_LOADING_STEP;
   api.getFilms(cardsCount)
     .then((films) => {
@@ -38,8 +41,8 @@ const showCards = () => {
       renderFilters(initialFilters, films, chart);
       renderChart(chart);
       renderCards(films, chart);
-      if (films.length === ALL_FILMS_COUNT) {
-        showMoreButton.classList.add(`visually-hidden`);
+      if (films.length === allCardsSount) {
+        showMoreButton.hideButton();
       }
 
       searchField.onInput = () => {
@@ -291,17 +294,22 @@ const renderChart = (stat) => {
   stat.chartView();
 };
 
-
 cardsContainer.innerHTML = `<div>${START_STRING}</div>`;
-searchContainer.innerHTML = ``;
-searchContainer.appendChild(searchField.render());
-
-showCards();
-showMoreButton.addEventListener(`click`, showCards);
-
-const filmsCountContainer = document.querySelector(`.footer__statistics p`);
 api.getFilmsCount()
   .then((responce) => {
+    const ALL_FILMS_COUNT = responce.length; // общее количество фильмов в системе
+
+    searchContainer.innerHTML = ``;
+    searchContainer.appendChild(searchField.render());
+
     renderUserStatus(responce);
+
+    showCards(ALL_FILMS_COUNT);
+
+    cardsContainer.parentNode.appendChild(showMoreButton.render());
+    showMoreButton.onClick = () => {
+      showCards(ALL_FILMS_COUNT);
+    };
+
     filmsCountContainer.innerHTML = `${responce.length} movies inside`;
   });
