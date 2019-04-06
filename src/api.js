@@ -27,7 +27,7 @@ export const API = class {
 
   getFilmsCount() {
     return this._load({url: `movies`})
-    .then(toJSON)
+    .then(toJSON);
   }
 
   getFilms(count) {
