@@ -2,6 +2,7 @@
 import {getFilters} from './get-filter.js';
 import {toggleVisuallity, shake} from './utils.js';
 import {Filter} from './filter.js';
+import {Search} from './search.js';
 import {Film} from './film.js';
 import {TopFilm} from './top-film.js';
 import {FilmPopup} from './film-popup.js';
@@ -11,6 +12,7 @@ import {API} from './api.js';
 /* Переменные */
 const bodyContainer = document.querySelector(`body`);
 const mainContainer = document.querySelector(`main`);
+const searchContainer = document.querySelector(`.header__search`);
 const filterContainer = document.querySelector(`.main-navigation`);
 const cardsContainer = document.querySelector(`.films-list .films-list__container `);
 const showMoreButton = document.querySelector(`.films-list__show-more`);
@@ -22,6 +24,7 @@ const ERROR_STRING = `Something went wrong while loading movies. Check your conn
 const ALL_FILMS_COUNT = 20;
 const FILMS_LOADING_STEP = 5;
 const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
+const searchField = new Search();
 const initialFilters = getFilters();
 
 let cardsCount = 0;
@@ -37,6 +40,12 @@ const showCards = () => {
       if (films.length === ALL_FILMS_COUNT) {
         showMoreButton.classList.add(`visually-hidden`);
       }
+
+      searchField.onInput = () => {
+        const searchingValue = searchField._element.value;
+        const filteredFilms = films.filter((film) => film.title.match(`^` + searchingValue));
+        renderCards(filteredFilms, ``);
+      };
     })
     .catch(() => {
       const error = `<div>${ERROR_STRING}</div>`;
@@ -424,7 +433,11 @@ const renderChart = (stat) => {
   stat.chartView();
 };
 
+
 cardsContainer.innerHTML = `<div>${START_STRING}</div>`;
+searchContainer.innerHTML = ``;
+searchContainer.appendChild(searchField.render());
+
 showCards();
 showMoreButton.addEventListener(`click`, showCards);
 

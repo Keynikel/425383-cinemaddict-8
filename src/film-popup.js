@@ -148,7 +148,7 @@ export class FilmPopup extends Component {
 
         <section class="film-details__user-rating-wrap">
           <div class="film-details__user-rating-controls visually-hidden">
-            <span class="film-details__watched-status ${this._state.isWatched ? `film-details__watched-status--active` : ``} "> ${this._filmStatusText()} </span>
+            <span class="film-details__watched-status"></span>
             <button class="film-details__watched-reset" type="button">undo</button>
           </div>
 

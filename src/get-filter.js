@@ -8,12 +8,10 @@ export const getFilters = () => {
     {
       label: `Watchlist`,
       anchor: `watchlist`,
-      count: 13
     },
     {
       label: `History`,
       anchor: `history`,
-      count: 4
     },
     {
       label: `Stats`,
