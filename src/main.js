@@ -59,12 +59,13 @@ const showCards = (allCardsSount) => {
 
 const renderUserStatus = (films) => {
   const userStatusContainer = document.querySelector(`.profile__rating`);
-  const watchedFilmsCount = films.filter((film) => film.user_details.already_watched).length;
+  const watchedFilms = films.filter((film) => film.user_details.already_watched);
+  console.log(watchedFilms);
   let status = ``;
-  if (watchedFilmsCount <= 10) {
+  if (watchedFilms.length <= 10) {
     status = `novice`;
   } else {
-    if (watchedFilmsCount > 10 && watchedFilmsCount <= 20) {
+    if (watchedFilms.length > 10 && watchedFilms.length <= 20) {
       status = `fan`;
     } else {
       status = `movie buff`;
@@ -135,6 +136,10 @@ const createCommonCallbacks = (card, film, popup) => {
     .then((newFilm) => {
       popup.update(newFilm);
       popup.updateFilmDetails(`watched`);
+      api.getFilmsCount()
+        .then((responce) => {
+          renderUserStatus(responce);
+        });
     });
   };
 
@@ -230,11 +235,11 @@ const renderCards = (films, chart) => {
         chart.update(films);
         renderChart(chart);
         view.unblockControls(card);
+        api.getFilmsCount()
+          .then((responce) => {
+            renderUserStatus(responce);
+          });
       })
-      .then(api.getFilmsCount()
-        .then((responce) => {
-          renderUserStatus(responce);
-        }))
       .catch(() => {
         view.errorControls(card);
       });
