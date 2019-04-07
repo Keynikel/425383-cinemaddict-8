@@ -25,10 +25,15 @@ export const API = class {
     this._authorization = authorization;
   }
 
-  getFilms() {
+  getFilmsCount() {
+    return this._load({url: `movies`})
+    .then(toJSON);
+  }
+
+  getFilms(count) {
     return this._load({url: `movies`})
     .then(toJSON)
-    .then(ModelFilm.parseFilms);
+    .then((responce) => ModelFilm.parseCountedFilms(responce, count));
   }
 
   updateFilm({id, data}) {

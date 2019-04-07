@@ -1,5 +1,5 @@
 import {Component} from './component';
-let moment = require(`moment`);
+import * as moment from 'moment';
 
 export class Film extends Component {
   constructor(data) {
@@ -23,7 +23,8 @@ export class Film extends Component {
     this._onClick = null;
     this._onCommentsLinkClick = this._onCommentsLinkClick.bind(this);
     this._onAddToWatchList = this._onAddToWatchList.bind(this);
-    this._onMarkAsWatched = this._onMarkAsWatched.bind(this);
+    this._onAddToWatched = this._onAddToWatched.bind(this);
+    this._onAddToFavorite = this._onAddToFavorite.bind(this);
   }
 
   get template() {
@@ -34,8 +35,7 @@ export class Film extends Component {
         <p class="film-card__info">
           <span class="film-card__year">${moment(this._year).format(`YYYY`)}</span>
           <span class="film-card__duration">
-             ${moment.duration(this._duration, `minutes`).hours()}h
-             ${moment.duration(this._duration, `minutes`).minutes()}min
+             ${ moment.utc(moment.duration(this._duration, `minutes`).asMilliseconds()).format(`HH:mm`)}
           </span>
           <span class="film-card__genre">${this._genre.length ? this._genre[0] : ``}</span>
         </p>
@@ -59,8 +59,12 @@ export class Film extends Component {
     this._onAddToWatchList = fn;
   }
 
-  set onMarkAsWatched(fn) {
-    this._onMarkAsWatched = fn;
+  set onAddToWatched(fn) {
+    this._onAddToWatched = fn;
+  }
+
+  set onAddToFavorite(fn) {
+    this._onAddToFavorite = fn;
   }
 
   update(data) {
@@ -80,9 +84,14 @@ export class Film extends Component {
     return typeof this._onAddToWatchList === `function` && this._onAddToWatchList();
   }
 
-  _onMarkAsWatched(evt) {
+  _onAddToWatched(evt) {
     evt.preventDefault();
-    return typeof this._onMarkAsWatched === `function` && this._onMarkAsWatched();
+    return typeof this._onAddToWatched === `function` && this._onAddToWatched();
+  }
+
+  _onAddToFavorite(evt) {
+    evt.preventDefault();
+    return typeof this._onAddToFavorite === `function` && this._onAddToFavorite();
   }
 
   createListeners() {
@@ -93,6 +102,9 @@ export class Film extends Component {
       .addEventListener(`click`, this._onAddToWatchList);
 
     this._element.querySelector(`.film-card__controls-item--mark-as-watched`)
-      .addEventListener(`click`, this._onMarkAsWatched);
+      .addEventListener(`click`, this._onAddToWatched);
+
+    this._element.querySelector(`.film-card__controls-item--favorite`)
+      .addEventListener(`click`, this._onAddToFavorite);
   }
 }
