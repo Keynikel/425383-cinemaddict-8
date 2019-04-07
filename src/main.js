@@ -60,7 +60,6 @@ const showCards = (allCardsSount) => {
 const renderUserStatus = (films) => {
   const userStatusContainer = document.querySelector(`.profile__rating`);
   const watchedFilms = films.filter((film) => film.user_details.already_watched);
-  console.log(watchedFilms);
   let status = ``;
   if (watchedFilms.length <= 10) {
     status = `novice`;

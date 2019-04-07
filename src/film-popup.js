@@ -1,5 +1,5 @@
 import {Component} from './component';
-let moment = require(`moment`);
+import * as moment from 'moment';
 
 export class FilmPopup extends Component {
 
