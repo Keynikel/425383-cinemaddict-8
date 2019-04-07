@@ -36,6 +36,7 @@ export class FilmPopup extends Component {
     this._onDelete = null;
 
     this._onCloseButtonClick = this._onCloseButtonClick.bind(this);
+    this._onEscPress = this._onEscPress.bind(this);
     this._onAddToWatchList = this._onAddToWatchList.bind(this);
     this._onAddToWatched = this._onAddToWatched.bind(this);
     this._onAddToFavorite = this._onAddToFavorite.bind(this);
@@ -237,6 +238,13 @@ export class FilmPopup extends Component {
     return typeof this._onClick === `function` && this._onClick();
   }
 
+  _onEscPress(evt) {
+    if (evt.keyCode === 27) {
+      return typeof this._onClick === `function` && this._onClick();
+    }
+    return 0;
+  }
+
   update(data) {
     this._state.isListed = data.user_details.watchlist;
     this._state.isWatched = data.user_details.already_watched;
@@ -304,6 +312,8 @@ export class FilmPopup extends Component {
   }
 
   createListeners() {
+    document.addEventListener(`keydown`, this._onEscPress);
+
     this._element.querySelector(`.film-details__close-btn`)
         .addEventListener(`click`, this._onCloseButtonClick);
 
@@ -343,6 +353,8 @@ export class FilmPopup extends Component {
   }
 
   removeListeners() {
+    document.removeEventListener(`keydown`, this._onEscPress);
+
     this._element.querySelector(`.film-details__close-btn`)
         .removeEventListener(`click`, this._onCloseButtonClick);
 
