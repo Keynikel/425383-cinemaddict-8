@@ -1,5 +1,6 @@
 import {Component} from './component';
 import * as moment from 'moment';
+import * as toEmoji from 'emoji-name-map';
 
 export class FilmPopup extends Component {
 
@@ -367,7 +368,6 @@ export class FilmPopup extends Component {
   }
 
   _commentsMarkdown() {
-    const toEmoji = require(`emoji-name-map`);
     let commentMarkdown = ``;
 
     this._comments.forEach((comment) => {
@@ -390,7 +390,6 @@ export class FilmPopup extends Component {
   }
 
   _changeIconMarkdown(icon) {
-    const toEmoji = require(`emoji-name-map`);
     icon = icon.replace(/\-/gi, `_`);
     const iconContainer = this._element.querySelector(`.film-details__add-emoji-label`);
     iconContainer.innerHTML = toEmoji.get(`:${icon}:`);
