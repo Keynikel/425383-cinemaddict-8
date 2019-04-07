@@ -147,9 +147,9 @@ export class FilmPopup extends Component {
         </section>
 
         <section class="film-details__user-rating-wrap">
-          <div class="film-details__user-rating-controls visually-hidden">
-            <span class="film-details__watched-status"></span>
-            <button class="film-details__watched-reset" type="button">undo</button>
+          <div class="film-details__user-rating-controls">
+          <span class="film-details__watched-status ${this._state.isWatched ? `film-details__watched-status--active` : ``} "> ${this._filmStatusText()} </span>
+            <button class="film-details__watched-reset  visually-hidden" type="button">undo</button>
           </div>
 
           <div class="film-details__user-score">
@@ -245,7 +245,7 @@ export class FilmPopup extends Component {
   }
 
   updateComments() {
-    const raitingControlsContainer = this._element.querySelector(`.film-details__user-rating-controls`);
+    const raitingControlsContainer = this._element.querySelector(`.film-details__watched-reset`);
     const commentsCounter = this._element.querySelector(`.film-details__comments-count`);
     const commentsContainer = this._element.querySelector(`.film-details__comments-list`);
     const commentsList = this._commentsMarkdown();
@@ -298,7 +298,7 @@ export class FilmPopup extends Component {
   }
 
   updateCommentsControls() {
-    const raitingControlsContainer = this._element.querySelector(`.film-details__user-rating-controls`);
+    const raitingControlsContainer = this._element.querySelector(`.film-details__watched-reset`);
     raitingControlsContainer.classList.add(`visually-hidden`);
   }
 
@@ -324,7 +324,8 @@ export class FilmPopup extends Component {
 
     this._element.querySelector(`.film-details__comment-input`)
       .addEventListener(`keydown`, (e) => {
-        if (e.ctrlKey && e.keyCode === 13) {
+        const isMac = window.navigator.platform.match(`Mac`);
+        if ((isMac ? e.metaKey : e.ctrlKey) && e.keyCode === 13) {
           this._onTextareaEnter();
         }
       });
