@@ -34,10 +34,6 @@ export class ModelFilm {
     return data.map(ModelFilm .parseFilm);
   }
 
-  static parseCountedFilms(data, count) {
-    return data.map(ModelFilm.parseFilm).slice(0, count);
-  }
-
   toRAW() {
     return {
       'id': this.id,
