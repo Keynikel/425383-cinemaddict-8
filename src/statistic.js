@@ -1,7 +1,7 @@
 import {Component} from './component';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-let moment = require(`moment`);
+import * as moment from 'moment';
 
 
 export class Statistic extends Component {

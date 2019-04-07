@@ -1,5 +1,6 @@
 import {Component} from './component';
-let moment = require(`moment`);
+import * as moment from 'moment';
+import * as toEmoji from 'emoji-name-map';
 
 export class FilmPopup extends Component {
 
@@ -32,9 +33,14 @@ export class FilmPopup extends Component {
     this._onChange = null;
     this._onClick = null;
     this._onEnter = null;
+    this._onDelete = null;
 
     this._onCloseButtonClick = this._onCloseButtonClick.bind(this);
+    this._onAddToWatchList = this._onAddToWatchList.bind(this);
+    this._onAddToWatched = this._onAddToWatched.bind(this);
+    this._onAddToFavorite = this._onAddToFavorite.bind(this);
     this._onChangeScore = this._onChangeScore.bind(this);
+    this._onDeleteLastComment = this._onDeleteLastComment.bind(this);
 
   }
 
@@ -143,8 +149,8 @@ export class FilmPopup extends Component {
 
         <section class="film-details__user-rating-wrap">
           <div class="film-details__user-rating-controls">
-            <span class="film-details__watched-status ${this._state.isWatched ? `film-details__watched-status--active` : ``} "> Already watched</span>
-            <button class="film-details__watched-reset" type="button">undo</button>
+          <span class="film-details__watched-status ${this._state.isWatched ? `film-details__watched-status--active` : ``} "> ${this._filmStatusText()} </span>
+            <button class="film-details__watched-reset  visually-hidden" type="button">undo</button>
           </div>
 
           <div class="film-details__user-score">
@@ -171,12 +177,47 @@ export class FilmPopup extends Component {
     this._onClick = fn;
   }
 
+  set onAddToWatchList(fn) {
+    this._onAddToWatchList = fn;
+  }
+
+  set onAddToWatched(fn) {
+    this._onAddToWatched = fn;
+  }
+
+  set onAddToFavorite(fn) {
+    this._onAddToFavorite = fn;
+  }
+
+  set onDelete(fn) {
+    this._onDelete = fn;
+  }
+
   set onChange(fn) {
     this._onChange = fn;
   }
 
   set onEnter(fn) {
     this._onEnter = fn;
+  }
+
+  _onAddToWatchList(evt) {
+    evt.preventDefault();
+    return typeof this._onAddToWatchList === `function` && this._onAddToWatchList();
+  }
+
+  _onAddToWatched(evt) {
+    evt.preventDefault();
+    return typeof this._onAddToWatched === `function` && this._onAddToWatched();
+  }
+
+  _onDeleteLastComment() {
+    return typeof this._onDelete === `function` && this._onDelete();
+  }
+
+  _onAddToFavorite(evt) {
+    evt.preventDefault();
+    return typeof this._onAddToFavorite === `function` && this._onAddToFavorite();
   }
 
   _onChangeScore(value) {
@@ -205,9 +246,11 @@ export class FilmPopup extends Component {
   }
 
   updateComments() {
+    const raitingControlsContainer = this._element.querySelector(`.film-details__watched-reset`);
     const commentsCounter = this._element.querySelector(`.film-details__comments-count`);
     const commentsContainer = this._element.querySelector(`.film-details__comments-list`);
     const commentsList = this._commentsMarkdown();
+    raitingControlsContainer.classList.remove(`visually-hidden`);
     commentsCounter.textContent = this._comments.length;
     commentsContainer.innerHTML = commentsList;
   }
@@ -217,9 +260,61 @@ export class FilmPopup extends Component {
     scoreContainer.textContent = `Your rate ${this._yourScore}`;
   }
 
+  updateFilmDetails(state) {
+    const detalisContainer = this._element.querySelector(`.film-details__controls`);
+    const statusContainer = this._element.querySelector(`.film-details__watched-status`);
+    const filmStatusContainer = this._element.querySelector(`.film-details__watched-status`);
+    let checkField = ``;
+    let newCheckField = ``;
+
+    switch (state) {
+      case `listed`:
+        checkField = detalisContainer.querySelector(`#watchlist`);
+        newCheckField = document.createElement(`div`);
+        newCheckField.innerHTML = `<input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${this._state.isListed ? `checked` : ``}>`;
+        break;
+      case `watched`:
+        checkField = detalisContainer.querySelector(`#watchlist`);
+        newCheckField = document.createElement(`div`);
+        newCheckField.innerHTML = `<input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${this._state.isListed ? `checked` : ``}>`;
+        detalisContainer.replaceChild(newCheckField.firstChild, checkField);
+        checkField = detalisContainer.querySelector(`#watched`);
+        newCheckField = document.createElement(`div`);
+        newCheckField.innerHTML = `<input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${this._state.isWatched ? `checked` : ``}>`;
+        break;
+      case `favorite`:
+        checkField = detalisContainer.querySelector(`#favorite`);
+        newCheckField = document.createElement(`div`);
+        newCheckField.innerHTML = `<input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${this._state.isFavorite ? `checked` : ``}>`;
+        break;
+    }
+    statusContainer.innerHTML = status;
+    detalisContainer.replaceChild(newCheckField.firstChild, checkField);
+    if (this._state.isWatched) {
+      filmStatusContainer.classList.add(`film-details__watched-status--active`);
+    } else {
+      filmStatusContainer.classList.remove(`film-details__watched-status--active`);
+    }
+    filmStatusContainer.innerHTML = this._filmStatusText();
+  }
+
+  updateCommentsControls() {
+    const raitingControlsContainer = this._element.querySelector(`.film-details__watched-reset`);
+    raitingControlsContainer.classList.add(`visually-hidden`);
+  }
+
   createListeners() {
     this._element.querySelector(`.film-details__close-btn`)
         .addEventListener(`click`, this._onCloseButtonClick);
+
+    this._element.querySelector(`.film-details__control-label--watchlist`)
+      .addEventListener(`click`, this._onAddToWatchList);
+
+    this._element.querySelector(`.film-details__control-label--watched`)
+      .addEventListener(`click`, this._onAddToWatched);
+
+    this._element.querySelector(`.film-details__control-label--favorite`)
+      .addEventListener(`click`, this._onAddToFavorite);
 
     let scores = this._element.querySelectorAll(`.film-details__user-rating-input`);
     scores.forEach(
@@ -230,7 +325,8 @@ export class FilmPopup extends Component {
 
     this._element.querySelector(`.film-details__comment-input`)
       .addEventListener(`keydown`, (e) => {
-        if (e.ctrlKey && e.keyCode === 13) {
+        const isMac = window.navigator.platform.match(`Mac`);
+        if ((isMac ? e.metaKey : e.ctrlKey) && e.keyCode === 13) {
           this._onTextareaEnter();
         }
       });
@@ -241,11 +337,23 @@ export class FilmPopup extends Component {
           this._changeIconMarkdown(icon.getAttribute(`value`))
         )
     );
+
+    this._element.querySelector(`.film-details__watched-reset`)
+      .addEventListener(`click`, this._onDeleteLastComment);
   }
 
   removeListeners() {
     this._element.querySelector(`.film-details__close-btn`)
         .removeEventListener(`click`, this._onCloseButtonClick);
+
+    this._element.querySelector(`.film-details__control-label--watchlist`)
+      .removeEventListener(`click`, this._onAddToWatchList);
+
+    this._element.querySelector(`.film-details__control-label--watched`)
+      .removeEventListener(`click`, this._onAddToWatched);
+
+    this._element.querySelector(`.film-details__control-label--favorite`)
+      .addEventListener(`click`, this._onAddToFavorite);
   }
 
   _raitingScoreMarkdown() {
@@ -260,7 +368,6 @@ export class FilmPopup extends Component {
   }
 
   _commentsMarkdown() {
-    const toEmoji = require(`emoji-name-map`);
     let commentMarkdown = ``;
 
     this._comments.forEach((comment) => {
@@ -283,9 +390,20 @@ export class FilmPopup extends Component {
   }
 
   _changeIconMarkdown(icon) {
-    const toEmoji = require(`emoji-name-map`);
     icon = icon.replace(/\-/gi, `_`);
     const iconContainer = this._element.querySelector(`.film-details__add-emoji-label`);
     iconContainer.innerHTML = toEmoji.get(`:${icon}:`);
+  }
+
+  _filmStatusText() {
+    if (this._state.isWatched) {
+      return `Already watched`;
+    } else {
+      if (this._state.isListed) {
+        return `Will watch`;
+      } else {
+        return ``;
+      }
+    }
   }
 }
