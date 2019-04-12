@@ -23,6 +23,10 @@ export class ShowMoreButton extends Component {
     this._element.classList.add(`visually-hidden`);
   }
 
+  showButton() {
+    this._element.classList.remove(`visually-hidden`);
+  }
+
   _onButtonClick() {
     return typeof this._onClick === `function` && this._onClick();
   }

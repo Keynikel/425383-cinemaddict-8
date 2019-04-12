@@ -1,4 +1,4 @@
-import {shake} from './utils';
+import {shake, createElement} from './utils';
 
 // Обратная связь при указании рейтинга
 export const blockRaitingInput = (element) => {
@@ -112,4 +112,26 @@ export const errorControls = (element) => {
     button.disabled = false;
     button.style.opacity = `1`;
   });
+};
+
+export const renderElement = (container, element) => {
+  container.innerHTML = ``;
+  container.appendChild(element);
+};
+
+export const getUserStatus = (films) => {
+  const watchedFilms = films.filter((film) => film.user_details.already_watched);
+  if (watchedFilms.length <= 10) {
+    return createElement(`novice`);
+  } else {
+    if (watchedFilms.length > 10 && watchedFilms.length <= 20) {
+      return createElement(`fan`);
+    } else {
+      return createElement(`movie buff`);
+    }
+  }
+};
+
+export const getConnectionStatus = (status) => {
+  return createElement(status);
 };

@@ -22,6 +22,7 @@ export class FilmPopup extends Component {
     this._poster = data.poster;
     this._description = data.description;
     this._comments = data.comments;
+    this._watchingDate = data.watchingDate;
     this._element = null;
 
     this._state = {
@@ -251,6 +252,7 @@ export class FilmPopup extends Component {
     this._state.isFavorite = data.user_details.favorite;
     this._yourScore = data.user_details.personal_rating;
     this._comments = data.comments;
+
   }
 
   updateComments() {

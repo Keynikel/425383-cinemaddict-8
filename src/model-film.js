@@ -24,6 +24,7 @@ export class ModelFilm {
       isWatched: data.user_details.already_watched,
       isFavorite: data.user_details.favorite
     };
+    this.watchingDate = data.user_details.watching_date;
   }
 
   static parseFilm(data) {

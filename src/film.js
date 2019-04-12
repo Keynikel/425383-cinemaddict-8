@@ -1,5 +1,5 @@
 import {Component} from './component';
-let moment = require(`moment`);
+import * as moment from 'moment';
 
 export class Film extends Component {
   constructor(data) {
@@ -12,6 +12,7 @@ export class Film extends Component {
     this._poster = data.poster;
     this._description = data.description;
     this._commtens = data.comments;
+    this._watchingDate = data.watchingDate;
     this._element = null;
 
     this._state = {

@@ -30,10 +30,10 @@ export const API = class {
     .then(toJSON);
   }
 
-  getFilms(count) {
+  getFilms() {
     return this._load({url: `movies`})
     .then(toJSON)
-    .then((responce) => ModelFilm.parseCountedFilms(responce, count));
+    .then((responce) => ModelFilm.parseFilms(responce));
   }
 
   updateFilm({id, data}) {
