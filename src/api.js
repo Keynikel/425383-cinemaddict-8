@@ -33,7 +33,7 @@ export const API = class {
   getFilms() {
     return this._load({url: `movies`})
     .then(toJSON)
-    .then((responce) => ModelFilm.parseFilms(responce));
+    .then((response) => ModelFilm.parseFilms(response));
   }
 
   updateFilm({id, data}) {

@@ -5,29 +5,8 @@ export const createElement = (template) => {
 };
 
 export const shake = (element) => {
-  const ANIMATION_TIMEOUT = 600;
-  element.style.animation = `shake ${ANIMATION_TIMEOUT / 1000}s`;
-
+  element.style.animation = `shake 0.6s`;
   setTimeout(() => {
     element.style.animation = ``;
-  }, ANIMATION_TIMEOUT);
-};
-
-export const toggleVisuallity = (classToShow) => {
-  const films = document.querySelector(`.films`);
-  const stats = document.querySelector(`.statistic`);
-  switch (classToShow) {
-    case `films`:
-      if (films.classList.contains(`visually-hidden`)) {
-        films.classList.remove(`visually-hidden`);
-        stats.classList.add(`visually-hidden`);
-      }
-      break;
-    case `statistic`:
-      if (stats.classList.contains(`visually-hidden`)) {
-        stats.classList.remove(`visually-hidden`);
-        films.classList.add(`visually-hidden`);
-      }
-      break;
-  }
+  }, 600);
 };
