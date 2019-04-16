@@ -1,6 +1,6 @@
-import {Component} from './component';
+import Component from './component';
 
-export class Filter extends Component {
+class Filter extends Component {
   constructor(data, films) {
     super();
     this._label = data.name;
@@ -30,15 +30,15 @@ export class Filter extends Component {
     return this._showed;
   }
 
-  set onFilter(fn) {
-    this._onFilter = fn;
-  }
-
   set showedFilms(num) {
     this._showed = num;
   }
 
-  setState(state) {
+  set onFilter(fn) {
+    this._onFilter = fn;
+  }
+
+  set setState(state) {
     this._state = state;
     if (this._state === `active`) {
       this._element.classList.add(`main-navigation__item--` + state);
@@ -67,3 +67,5 @@ export class Filter extends Component {
     this._element.addEventListener(`click`, () => this._onFilterClick(this._anchor));
   }
 }
+
+export default Filter;

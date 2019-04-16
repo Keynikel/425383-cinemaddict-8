@@ -1,7 +1,7 @@
-import {Component} from './component';
-import * as moment from 'moment';
+import Component from './component';
+import moment from 'moment';
 
-export class Film extends Component {
+class Film extends Component {
   constructor(data) {
     super();
     this._title = data.title;
@@ -108,4 +108,20 @@ export class Film extends Component {
     this._element.querySelector(`.film-card__controls-item--favorite`)
       .addEventListener(`click`, this._onAddToFavorite);
   }
+
+  removeListeners() {
+    this._element.querySelector(`.film-card__comments`)
+        .removeEventListener(`click`, this._onCommentsLinkClick);
+
+    this._element.querySelector(`.film-card__controls-item--add-to-watchlist`)
+      .removeEventListener(`click`, this._onAddToWatchList);
+
+    this._element.querySelector(`.film-card__controls-item--mark-as-watched`)
+      .removeEventListener(`click`, this._onAddToWatched);
+
+    this._element.querySelector(`.film-card__controls-item--favorite`)
+      .removeEventListener(`click`, this._onAddToFavorite);
+  }
 }
+
+export default Film;

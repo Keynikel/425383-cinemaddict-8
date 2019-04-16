@@ -1,20 +1,20 @@
-import {API} from './api.js';
+import API from './api';
 
-import * as consts from './const.js';
-import {renderElement, getConnectionStatus, getUserStatus} from './view-utils.js';
-import {renderInterface} from './renders.js';
+import {FILMS_LOADING_STEP} from './data/data';
+import {Authorize, LoadingInfo} from './data/enum';
+import {renderElement, getConnectionStatus, getUserStatus} from './utils/view-utils';
+import {renderInterface} from './controllers/renders';
 
 const cardsContainer = document.querySelector(`.films-list .films-list__container `);
 const filmsCountContainer = document.querySelector(`.footer__statistics p`);
 const userStatusContainer = document.querySelector(`.profile__rating`);
-
-const api = new API({endPoint: consts.END_POINT, authorization: consts.AUTHORIZATION});
+const api = new API({endPoint: Authorize.END_POINT, authorization: Authorize.KEY});
 
 
 let cardsCount = 0;
 
 
-renderElement(cardsContainer, getConnectionStatus(consts.START_STRING));
+renderElement(cardsContainer, getConnectionStatus(LoadingInfo.START_STRING));
 api.getFilmsCount()
   .then((response) => {
     const ALL_FILMS_COUNT = response.length; // общее количество фильмов в системе
@@ -26,10 +26,10 @@ api.getFilmsCount()
   .then(() => {
     api.getFilms()
       .then((films) => {
-        renderInterface(films, cardsCount + consts.FILMS_LOADING_STEP);
+        renderInterface(films, cardsCount + FILMS_LOADING_STEP);
       });
   })
   .catch((err) => {
-    renderElement(cardsContainer, getConnectionStatus(consts.ERROR_STRING));
+    renderElement(cardsContainer, getConnectionStatus(LoadingInfo.ERROR_STRING));
     console.log(err);
   });

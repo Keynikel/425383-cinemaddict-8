@@ -1,18 +1,12 @@
 import Component from './component';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import * as moment from 'moment';
-import * as utils from './utils.js';
+import moment from 'moment';
+import {createElement} from '../utils/common-utils';
+import {CHART_FILTERS} from '../data/data';
 
-const STATIS_FILTERS = [
-  {label: `All time`, id: `statistic-all-time`, value: `all-time`, checked: true},
-  {label: `Today`, id: `statistic-today`, value: `today`},
-  {label: `Week`, id: `statistic-week`, value: `week`},
-  {label: `Month`, id: `statistic-month`, value: `month`},
-  {label: `Year`, id: `statistic-year`, value: `year`},
-];
 
-export class Statistic extends Component {
+class Statistic extends Component {
   constructor(data) {
     super();
     this._films = data;
@@ -34,7 +28,7 @@ export class Statistic extends Component {
       <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
         <p class="statistic__filters-description">Show stats:</p>
 
-        ${STATIS_FILTERS.map((filter) => `<input type="radio" class="statistic__filters-input visually-hidden"
+        ${CHART_FILTERS.map((filter) => `<input type="radio" class="statistic__filters-input visually-hidden"
         name="statistic-filter" id="${filter.id}" value="${filter.value}" ${filter.checked ? `checked` : ``}>
         <label for="${filter.id}" class="statistic__filters-label">${filter.label}</label>`).join(``)}
       </form>
@@ -62,7 +56,7 @@ export class Statistic extends Component {
   }
 
   render() {
-    this._element = utils.createElement(this.template);
+    this._element = createElement(this.template);
     this.createListeners();
     this._generateCharts();
     return this._element;
@@ -75,13 +69,6 @@ export class Statistic extends Component {
     this._chart.destroy();
     this._updateStatisticMarkup();
     this._generateCharts();
-
-    this._filteredFilms.forEach((film) => {
-      console.log(moment(film.watchingDate).format('DD MM YYYY'));
-    });
-    this._films.forEach((film) => {
-      console.log(moment(film.watchingDate).format('DD MM YYYY'));
-    });
   }
 
   _countTotalDuration(data) {
@@ -255,3 +242,5 @@ export class Statistic extends Component {
     };
   }
 }
+
+export default Statistic;

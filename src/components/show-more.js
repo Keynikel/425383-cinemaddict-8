@@ -1,6 +1,6 @@
-import {Component} from './component';
+import Component from './component';
 
-export class ShowMoreButton extends Component {
+class ShowMoreButton extends Component {
   constructor() {
     super();
 
@@ -37,4 +37,10 @@ export class ShowMoreButton extends Component {
   createListeners() {
     this._element.addEventListener(`click`, this._onButtonClick);
   }
+
+  removeListeners() {
+    this._element.removeEventListener(`click`, this._onButtonClick);
+  }
 }
+
+export default ShowMoreButton;

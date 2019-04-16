@@ -1,15 +1,15 @@
-import {Filter} from './filter.js';
-import {Film} from './film.js';
-import {TopFilm} from './top-film.js';
-import {FilmPopup} from './film-popup.js';
-import {Search} from './search.js';
-import {ShowMoreButton} from './show-more.js';
-import {Statistic} from './statistic.js';
+import Filter from '../components/filter.js';
+import Film from '../components/film.js';
+import TopFilm from '../components/top-film.js';
+import FilmPopup from '../components/film-popup.js';
+import Search from '../components/search';
+import ShowMoreButton from '../components/show-more';
+import Statistic from '../components/statistic';
 
 import {createCommonCallbacks, createSpetialCallbacks} from './callbacks.js';
-import * as consts from './const.js';
-import * as filtersUtils from './filters-utils.js';
-import * as view from './view-utils.js';
+import {FILTERS_DATA, FILMS_LOADING_STEP} from '../data/data';
+import {filterCards, setFilterActive} from '../utils/filters-utils.js';
+import {renderElement} from '../utils/view-utils.js';
 
 const mainContainer = document.querySelector(`main`);
 const cardsContainer = document.querySelector(`.films-list .films-list__container `);
@@ -26,8 +26,8 @@ export const renderInterface = (allFilms, countToShow) => {
   const mostRatedFilms = allFilms.sort((a, b) => b.rating - a.rating).slice(0, 2);
   const mostCommentedFilms = allFilms.sort((a, b) => b.comments.length - a.comments.length).slice(0, 2);
 
-  view.renderElement(searchContainer, searchField.render());
-  renderFilters(consts.FILTERS_DATA, filteredFilms);
+  renderElement(searchContainer, searchField.render());
+  renderFilters(FILTERS_DATA, filteredFilms);
   renderCards(visibleFilms, filteredFilms);
   renderShowMoreButton(filteredFilms, countToShow);
   renderTopRatedCards(mostRatedFilms, mostRatedContainer, visibleFilms);
@@ -51,7 +51,7 @@ export const renderFilters = (filters, allFilms) => {
 
     filter.onFilter = (anchor) => {
       const fullAnchor = `#` + anchor;
-      filtersUtils.setFilterActive(fullAnchor);
+      setFilterActive(fullAnchor);
       if (anchor === `stats`) {
         renderCharts(allFilms);
       } else {
@@ -59,14 +59,14 @@ export const renderFilters = (filters, allFilms) => {
           mainContainer.querySelector(`.films`).classList.remove(`visually-hidden`);
           mainContainer.removeChild(mainContainer.querySelector(`.statistic`));
         }
-        let filteredCards = filtersUtils.filterCards(allFilms, anchor);
-        filter.showedFilms += consts.FILMS_LOADING_STEP;
-        renderFilters(consts.FILTERS_DATA, allFilms);
+        let filteredCards = filterCards(allFilms, anchor);
+        filter.showedFilms += FILMS_LOADING_STEP;
+        renderFilters(FILTERS_DATA, allFilms);
         renderShowMoreButton(filteredCards, filter.showedFilms, anchor);
         renderCards(filteredCards.slice(0, filter.showedFilms), allFilms);
       }
     };
-    filtersUtils.setFilterActive(activeFilter);
+    setFilterActive(activeFilter);
     filterContainer.appendChild(filter.render());
   });
 };
@@ -83,7 +83,7 @@ export const renderShowMoreButton = (allFilms, countToShow, state = `all`) => {
   }
 
   showMoreButton.onClick = () => {
-    countToShow += consts.FILMS_LOADING_STEP;
+    countToShow += FILMS_LOADING_STEP;
     visibleFilms = allFilms.slice(0, countToShow);
     renderShowMoreButton(allFilms, countToShow, state);
     renderCards(visibleFilms, allFilms);

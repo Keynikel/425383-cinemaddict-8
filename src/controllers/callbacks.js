@@ -1,13 +1,13 @@
-import {API} from './api.js';
-const api = new API({endPoint: consts.END_POINT, authorization: consts.AUTHORIZATION});
-
-import * as consts from './const.js';
-import * as view from './view-utils.js';
+import API from '../api.js';
+import {Authorize} from '../data/enum';
+import {FILTERS_DATA} from '../data/data';
+import * as view from '../utils/view-utils.js';
 import * as renders from './renders.js';
-import * as moment from 'moment';
+import moment from 'moment';
 
 const bodyContainer = document.querySelector(`body`);
 const userStatusContainer = document.querySelector(`.profile__rating`);
+const api = new API({endPoint: Authorize.END_POINT, authorization: Authorize.KEY});
 
 export const createCommonCallbacks = (card, popup, film, allFilms) => {
   card.onClick = () => {
@@ -45,7 +45,7 @@ export const createCommonCallbacks = (card, popup, film, allFilms) => {
       view.unblockComment(popup);
     })
     .catch(() => {
-      view.errorCOmment(popup);
+      view.errorComment(popup);
     });
   };
 
@@ -58,7 +58,7 @@ export const createCommonCallbacks = (card, popup, film, allFilms) => {
       popup.update(newFilm);
       popup.updateFilmDetails(`listed`);
     });
-    renders.renderFilters(consts.FILTERS_DATA, allFilms);
+    renders.renderFilters(FILTERS_DATA, allFilms);
   };
 
   popup.onAddToWatched = (evt) => {
@@ -81,7 +81,7 @@ export const createCommonCallbacks = (card, popup, film, allFilms) => {
         .then((response) => {
           view.renderElement(userStatusContainer, view.getUserStatus(response));
         });
-      renders.renderFilters(consts.FILTERS_DATA, allFilms);
+      renders.renderFilters(FILTERS_DATA, allFilms);
     });
   };
 
@@ -94,7 +94,7 @@ export const createCommonCallbacks = (card, popup, film, allFilms) => {
       popup.update(newFilm);
       popup.updateFilmDetails(`favorite`);
     });
-    renders.renderFilters(consts.FILTERS_DATA, allFilms);
+    renders.renderFilters(FILTERS_DATA, allFilms);
   };
 
   popup.onDelete = () => {
@@ -125,7 +125,7 @@ export const createSpetialCallbacks = (card, popup, film, allFilms) => {
     .then((newFilm) => {
       popup.update(newFilm);
       view.unblockControls(card);
-      renders.renderFilters(consts.FILTERS_DATA, allFilms);
+      renders.renderFilters(FILTERS_DATA, allFilms);
     })
     .catch(() => {
       view.errorControls(card);
@@ -149,13 +149,13 @@ export const createSpetialCallbacks = (card, popup, film, allFilms) => {
     .then((newFilm) => {
       popup.update(newFilm);
       view.unblockControls(card);
-      renders.renderFilters(consts.FILTERS_DATA, allFilms);
+      renders.renderFilters(FILTERS_DATA, allFilms);
       api.getFilmsCount()
         .then((response) => {
           view.renderElement(userStatusContainer, view.getUserStatus(response));
         });
 
-      renders.renderFilters(consts.FILTERS_DATA, allFilms);
+      renders.renderFilters(FILTERS_DATA, allFilms);
     })
     .catch(() => {
       view.errorControls(card);
@@ -171,7 +171,7 @@ export const createSpetialCallbacks = (card, popup, film, allFilms) => {
     .then((newFilm) => {
       popup.update(newFilm);
       view.unblockControls(card);
-      renders.renderFilters(consts.FILTERS_DATA, allFilms);
+      renders.renderFilters(FILTERS_DATA, allFilms);
     })
     .catch(() => {
       view.errorControls(card);

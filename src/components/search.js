@@ -1,6 +1,6 @@
-import {Component} from './component';
+import Component from './component';
 
-export class Search extends Component {
+class Search extends Component {
   constructor() {
     super();
 
@@ -27,4 +27,10 @@ export class Search extends Component {
   createListeners() {
     this._element.addEventListener(`keyup`, this._onWordsInput);
   }
+
+  removeListeners() {
+    this._element.removeEventListener(`keyup`, this._onWordsInput);
+  }
 }
+
+export default Search;
