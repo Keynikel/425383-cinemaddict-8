@@ -1,7 +1,4 @@
-import {Method} from './api.js';
-import {toJSON} from './api.js';
-
-export class ModelFilm {
+class ModelFilm {
   constructor(data) {
     this.id = data[`id`];
     this.title = data.film_info.title;
@@ -24,18 +21,7 @@ export class ModelFilm {
       isWatched: data.user_details.already_watched,
       isFavorite: data.user_details.favorite
     };
-  }
-
-  static parseFilm(data) {
-    return new ModelFilm(data);
-  }
-
-  static parseFilms(data) {
-    return data.map(ModelFilm .parseFilm);
-  }
-
-  static parseCountedFilms(data, count) {
-    return data.map(ModelFilm.parseFilm).slice(0, count);
+    this.watchingDate = data.user_details.watching_date;
   }
 
   toRAW() {
@@ -51,14 +37,17 @@ export class ModelFilm {
     };
   }
 
-  updateFilm({id, data}) {
-    return this._load({
-      url: `movies/${id}`,
-      method: Method.PUT,
-      body: JSON.stringify(data),
-      headers: new Headers({'Content-Type': `application/json`})
-    })
-      .then(toJSON)
-      .then(ModelFilm.parseFilm);
+  static parseFilm(data) {
+    return new ModelFilm(data);
+  }
+
+  static parseFilms(data) {
+    return data.map(ModelFilm .parseFilm);
+  }
+
+  static parseCountedFilms(data, count) {
+    return data.map(ModelFilm.parseFilm).slice(0, count);
   }
 }
+
+export default ModelFilm;

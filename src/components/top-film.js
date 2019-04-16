@@ -1,7 +1,7 @@
-import {Film} from './film';
-import * as moment from 'moment';
+import Film from './film';
+import moment from 'moment';
 
-export class TopFilm extends Film {
+class TopFilm extends Film {
   constructor(data) {
     super(data);
   }
@@ -28,4 +28,11 @@ export class TopFilm extends Film {
     this._element.querySelector(`.film-card__comments`)
         .addEventListener(`click`, this._onCommentsLinkClick);
   }
+
+  removeListeners() {
+    this._element.querySelector(`.film-card__comments`)
+        .removeEventListener(`click`, this._onCommentsLinkClick);
+  }
 }
+
+export default TopFilm;

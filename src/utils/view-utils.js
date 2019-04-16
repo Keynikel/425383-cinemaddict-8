@@ -1,11 +1,12 @@
-import {shake} from './utils';
+import {shake, createElement} from './common-utils';
 
 // Обратная связь при указании рейтинга
 export const blockRaitingInput = (element) => {
   const scoreButtons = element._element.querySelectorAll(`.film-details__user-rating-input`);
+  const scoreLabels = element._element.querySelectorAll(`.film-details__user-rating-label`);
   scoreButtons.forEach(
-      (button) => {
-        const label = button.nextElementSibling;
+      (button, i) => {
+        const label = scoreLabels[i];
         button.disabled = true;
         label.style.background = `#979797`;
       }
@@ -14,9 +15,10 @@ export const blockRaitingInput = (element) => {
 
 export const unblockRaitingInput = (element) => {
   const scoreButtons = element._element.querySelectorAll(`.film-details__user-rating-input`);
+  const scoreLabels = element._element.querySelectorAll(`.film-details__user-rating-label`);
   scoreButtons.forEach(
-      (button) => {
-        const label = button.nextSibling.nextSibling;
+      (button, i) => {
+        const label = scoreLabels[i];
         button.disabled = false;
         if (button.checked) {
           label.style.background = `#ffe800`;
@@ -30,9 +32,10 @@ export const unblockRaitingInput = (element) => {
 
 export const errorRaitingInput = (element) => {
   const scoreButtons = element._element.querySelectorAll(`.film-details__user-rating-input`);
+  const scoreLabels = element._element.querySelectorAll(`.film-details__user-rating-label`);
   scoreButtons.forEach(
-      (button) => {
-        const label = button.nextSibling.nextSibling;
+      (button, i) => {
+        const label = scoreLabels[i];
         button.disabled = false;
         if (button.checked) {
           label.style.background = `red`;
@@ -60,7 +63,7 @@ export const unblockComment = (element) => {
   inputField.value = ``;
 };
 
-export const errorCOmment = (element) => {
+export const errorComment = (element) => {
   const inputField = element._element.querySelector(`.film-details__comment-input`);
   shake(inputField);
   inputField.disabled = false;
@@ -112,4 +115,27 @@ export const errorControls = (element) => {
     button.disabled = false;
     button.style.opacity = `1`;
   });
+};
+
+
+export const renderElement = (container, element) => {
+  container.innerHTML = ``;
+  container.appendChild(element);
+};
+
+export const getUserStatus = (films) => {
+  const watchedFilms = films.filter((film) => film.user_details.already_watched);
+  if (watchedFilms.length <= 10) {
+    return createElement(`novice`);
+  } else {
+    if (watchedFilms.length > 10 && watchedFilms.length <= 20) {
+      return createElement(`fan`);
+    } else {
+      return createElement(`movie buff`);
+    }
+  }
+};
+
+export const getConnectionStatus = (status) => {
+  return createElement(status);
 };

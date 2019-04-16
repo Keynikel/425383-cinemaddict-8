@@ -1,11 +1,12 @@
-import {Component} from './component';
+import Component from './component';
 
-export class ShowMoreButton extends Component {
+class ShowMoreButton extends Component {
   constructor() {
     super();
 
     this._element = null;
     this._onClick = null;
+    this._state = `show`;
 
     this._onButtonClick = this._onButtonClick.bind(this);
 
@@ -20,7 +21,13 @@ export class ShowMoreButton extends Component {
   }
 
   hideButton() {
+    this._state = `hide`;
     this._element.classList.add(`visually-hidden`);
+  }
+
+  showButton() {
+    this._state = `show`;
+    this._element.classList.remove(`visually-hidden`);
   }
 
   _onButtonClick() {
@@ -30,4 +37,10 @@ export class ShowMoreButton extends Component {
   createListeners() {
     this._element.addEventListener(`click`, this._onButtonClick);
   }
+
+  removeListeners() {
+    this._element.removeEventListener(`click`, this._onButtonClick);
+  }
 }
+
+export default ShowMoreButton;

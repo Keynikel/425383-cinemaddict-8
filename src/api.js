@@ -1,11 +1,5 @@
-import {ModelFilm} from './model-film.js';
-
-export const Method = {
-  GET: `GET`,
-  POST: `POST`,
-  PUT: `PUT`,
-  DELETE: `DELETE`
-};
+import ModelFilm from './models/model-film';
+import {METHOD} from './data/enum';
 
 const checkStatus = (response) => {
   if (response.status >= 200 && response.status < 300) {
@@ -15,11 +9,11 @@ const checkStatus = (response) => {
   }
 };
 
-export const toJSON = (response) => {
+const toJSON = (response) => {
   return response.json();
 };
 
-export const API = class {
+const API = class {
   constructor({endPoint, authorization}) {
     this._endPoint = endPoint;
     this._authorization = authorization;
@@ -30,23 +24,23 @@ export const API = class {
     .then(toJSON);
   }
 
-  getFilms(count) {
+  getFilms() {
     return this._load({url: `movies`})
     .then(toJSON)
-    .then((responce) => ModelFilm.parseCountedFilms(responce, count));
+    .then((response) => ModelFilm.parseFilms(response));
   }
 
   updateFilm({id, data}) {
     return this._load({
       url: `movies/${id}`,
-      method: Method.PUT,
+      method: METHOD.PUT,
       body: JSON.stringify(data),
       headers: new Headers({'Content-Type': `application/json`})
     })
       .then(toJSON);
   }
 
-  _load({url, method = Method.GET, body = null, headers = new Headers()}) {
+  _load({url, method = METHOD.GET, body = null, headers = new Headers()}) {
     headers.append(`Authorization`, this._authorization);
 
     return fetch(`${this._endPoint}/${url}`, {method, body, headers})
@@ -57,3 +51,5 @@ export const API = class {
       });
   }
 };
+
+export default API;
