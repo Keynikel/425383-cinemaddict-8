@@ -29,7 +29,6 @@ api.getFilmsCount()
         renderInterface(films, cardsCount + FILMS_LOADING_STEP);
       });
   })
-  .catch((err) => {
+  .catch(() => {
     renderElement(cardsContainer, getConnectionStatus(LoadingInfo.ERROR_STRING));
-    console.log(err);
   });
