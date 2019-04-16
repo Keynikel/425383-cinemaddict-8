@@ -9,7 +9,7 @@ import * as moment from 'moment';
 const bodyContainer = document.querySelector(`body`);
 const userStatusContainer = document.querySelector(`.profile__rating`);
 
-export const createCommonCallbacks = (card, popup, film, visibleFilms, allFilms) => {
+export const createCommonCallbacks = (card, popup, film, allFilms) => {
   card.onClick = () => {
     bodyContainer.appendChild(popup.render());
   };
@@ -57,8 +57,8 @@ export const createCommonCallbacks = (card, popup, film, visibleFilms, allFilms)
     .then((newFilm) => {
       popup.update(newFilm);
       popup.updateFilmDetails(`listed`);
-      renders.renderFilters(consts.FILTERS_DATA, visibleFilms, allFilms);
     });
+    renders.renderFilters(consts.FILTERS_DATA, allFilms);
   };
 
   popup.onAddToWatched = (evt) => {
@@ -81,6 +81,7 @@ export const createCommonCallbacks = (card, popup, film, visibleFilms, allFilms)
         .then((response) => {
           view.renderElement(userStatusContainer, view.getUserStatus(response));
         });
+      renders.renderFilters(consts.FILTERS_DATA, allFilms);
     });
   };
 
@@ -93,6 +94,7 @@ export const createCommonCallbacks = (card, popup, film, visibleFilms, allFilms)
       popup.update(newFilm);
       popup.updateFilmDetails(`favorite`);
     });
+    renders.renderFilters(consts.FILTERS_DATA, allFilms);
   };
 
   popup.onDelete = () => {
@@ -113,7 +115,7 @@ export const createCommonCallbacks = (card, popup, film, visibleFilms, allFilms)
   };
 };
 
-export const createSpetialCallbacks = (card, popup, film, visibleFilms, allFilms) => {
+export const createSpetialCallbacks = (card, popup, film, allFilms) => {
   card.onAddToWatchList = (evt) => {
     evt.preventDefault();
     film.state.isListed = !film.state.isListed;
@@ -123,7 +125,7 @@ export const createSpetialCallbacks = (card, popup, film, visibleFilms, allFilms
     .then((newFilm) => {
       popup.update(newFilm);
       view.unblockControls(card);
-      renders.renderFilters(consts.FILTERS_DATA, visibleFilms, allFilms);
+      renders.renderFilters(consts.FILTERS_DATA, allFilms);
     })
     .catch(() => {
       view.errorControls(card);
@@ -134,9 +136,9 @@ export const createSpetialCallbacks = (card, popup, film, visibleFilms, allFilms
     evt.preventDefault();
     film.state.isWatched = !film.state.isWatched;
     if (film.state.isWatched) {
-      film._watchingDate = null;
-    } else {
       film._watchingDate = moment().valueOf();
+    } else {
+      film._watchingDate = null;
     }
     if (film.state.isWatched && film.state.isListed) {
       film.state.isListed = !film.state.isListed;
@@ -147,11 +149,13 @@ export const createSpetialCallbacks = (card, popup, film, visibleFilms, allFilms
     .then((newFilm) => {
       popup.update(newFilm);
       view.unblockControls(card);
-      renders.renderFilters(consts.FILTERS_DATA, visibleFilms, allFilms);
+      renders.renderFilters(consts.FILTERS_DATA, allFilms);
       api.getFilmsCount()
         .then((response) => {
           view.renderElement(userStatusContainer, view.getUserStatus(response));
         });
+
+      renders.renderFilters(consts.FILTERS_DATA, allFilms);
     })
     .catch(() => {
       view.errorControls(card);
@@ -167,7 +171,7 @@ export const createSpetialCallbacks = (card, popup, film, visibleFilms, allFilms
     .then((newFilm) => {
       popup.update(newFilm);
       view.unblockControls(card);
-      renders.renderFilters(consts.FILTERS_DATA, visibleFilms, allFilms);
+      renders.renderFilters(consts.FILTERS_DATA, allFilms);
     })
     .catch(() => {
       view.errorControls(card);

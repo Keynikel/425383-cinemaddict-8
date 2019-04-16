@@ -31,3 +31,5 @@ export class Component {
 
   removeListeners() {}
 }
+
+export default Component;

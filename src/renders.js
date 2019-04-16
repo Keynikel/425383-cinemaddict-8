@@ -15,23 +15,23 @@ const mainContainer = document.querySelector(`main`);
 const cardsContainer = document.querySelector(`.films-list .films-list__container `);
 const searchContainer = document.querySelector(`.header__search`);
 
+export const showMoreButton = new ShowMoreButton();
+
 export const renderInterface = (allFilms, countToShow) => {
-  const filteredFilms = allFilms.slice();
-  const visibleFilms = filteredFilms.slice(0, countToShow);
-
   const searchField = new Search();
-
   const mostRatedContainer = document.querySelectorAll(`.films-list--extra .films-list__container`)[0];
   const mostCommentedContainer = document.querySelectorAll(`.films-list--extra .films-list__container`)[1];
+  const filteredFilms = allFilms.slice();
+  const visibleFilms = filteredFilms.slice(0, countToShow);
   const mostRatedFilms = allFilms.sort((a, b) => b.rating - a.rating).slice(0, 2);
   const mostCommentedFilms = allFilms.sort((a, b) => b.comments.length - a.comments.length).slice(0, 2);
 
   view.renderElement(searchContainer, searchField.render());
-  renderFilters(consts.FILTERS_DATA, visibleFilms, filteredFilms);
+  renderFilters(consts.FILTERS_DATA, filteredFilms);
   renderCards(visibleFilms, filteredFilms);
   renderShowMoreButton(filteredFilms, countToShow);
-  renderTopRatedCards(mostRatedFilms, mostRatedContainer);
-  renderTopRatedCards(mostCommentedFilms, mostCommentedContainer);
+  renderTopRatedCards(mostRatedFilms, mostRatedContainer, visibleFilms);
+  renderTopRatedCards(mostCommentedFilms, mostCommentedContainer, visibleFilms);
   cardsContainer.parentNode.appendChild(showMoreButton.render());
 
   searchField.onInput = () => {
@@ -41,15 +41,13 @@ export const renderInterface = (allFilms, countToShow) => {
   };
 };
 
-export const showMoreButton = new ShowMoreButton();
-
-export const renderFilters = (filters, films, allFilms) => {
+export const renderFilters = (filters, allFilms) => {
   const filterContainer = document.querySelector(`.main-navigation`);
   const activeFilter = document.querySelector(`.main-navigation__item--active`).getAttribute(`href`);
 
   filterContainer.innerHTML = ``;
   filters.forEach((item) => {
-    const filter = new Filter(item, films);
+    const filter = new Filter(item, allFilms);
 
     filter.onFilter = (anchor) => {
       const fullAnchor = `#` + anchor;
@@ -61,9 +59,9 @@ export const renderFilters = (filters, films, allFilms) => {
           mainContainer.querySelector(`.films`).classList.remove(`visually-hidden`);
           mainContainer.removeChild(mainContainer.querySelector(`.statistic`));
         }
-        let filteredCards = filtersUtils.filterCards(films, anchor, allFilms);
+        let filteredCards = filtersUtils.filterCards(allFilms, anchor);
         filter.showedFilms += consts.FILMS_LOADING_STEP;
-        renderFilters(consts.FILTERS_DATA, films, allFilms);
+        renderFilters(consts.FILTERS_DATA, allFilms);
         renderShowMoreButton(filteredCards, filter.showedFilms, anchor);
         renderCards(filteredCards.slice(0, filter.showedFilms), allFilms);
       }
@@ -88,9 +86,6 @@ export const renderShowMoreButton = (allFilms, countToShow, state = `all`) => {
     countToShow += consts.FILMS_LOADING_STEP;
     visibleFilms = allFilms.slice(0, countToShow);
     renderShowMoreButton(allFilms, countToShow, state);
-    if (state === `all`) {
-      renderFilters(consts.FILTERS_DATA, visibleFilms, allFilms);
-    }
     renderCards(visibleFilms, allFilms);
   };
 };
@@ -101,19 +96,19 @@ export const renderCards = (films, allFilms) => {
     const card = new Film(film);
     const popup = new FilmPopup(film);
 
-    createCommonCallbacks(card, popup, film, films, allFilms);
-    createSpetialCallbacks(card, popup, film, films, allFilms);
+    createCommonCallbacks(card, popup, film, allFilms);
+    createSpetialCallbacks(card, popup, film, allFilms);
     cardsContainer.appendChild(card.render());
   });
 };
 
-export const renderTopRatedCards = (films, container) => {
+export const renderTopRatedCards = (films, container, allFilms) => {
   container.innerHTML = ``;
   films.forEach((film) => {
     const card = new TopFilm(film);
     const popup = new FilmPopup(film);
 
-    createCommonCallbacks(card, popup, film);
+    createCommonCallbacks(card, popup, film, allFilms);
     container.appendChild(card.render());
   });
 };
@@ -124,12 +119,4 @@ export const renderCharts = (films) => {
 
   mainContainer.querySelector(`.films`).classList.add(`visually-hidden`);
   mainContainer.appendChild(stats.render());
-  stats.chartView();
-
-  stats.onFilter = (value) => {
-    const filteredFilms = filtersUtils.filterFilmsByTime(watchedFilms, value);
-    stats.renewValues = filteredFilms;
-    stats.updateStatisticMarkup();
-    stats.chartView();
-  };
 };
