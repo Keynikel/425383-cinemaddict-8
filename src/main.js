@@ -10,10 +10,6 @@ const filmsCountContainer = document.querySelector(`.footer__statistics p`);
 const userStatusContainer = document.querySelector(`.profile__rating`);
 const api = new API({endPoint: Authorize.END_POINT, authorization: Authorize.KEY});
 
-
-let cardsCount = 0;
-
-
 renderElement(cardsContainer, getConnectionStatus(LoadingInfo.START_STRING));
 api.getFilmsCount()
   .then((response) => {
@@ -26,7 +22,7 @@ api.getFilmsCount()
   .then(() => {
     api.getFilms()
       .then((films) => {
-        renderInterface(films, cardsCount + FILMS_LOADING_STEP);
+        renderInterface(films, FILMS_LOADING_STEP);
       });
   })
   .catch(() => {

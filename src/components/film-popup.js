@@ -43,7 +43,10 @@ class FilmPopup extends Component {
     this._onAddToFavorite = this._onAddToFavorite.bind(this);
     this._onChangeScore = this._onChangeScore.bind(this);
     this._onDeleteLastComment = this._onDeleteLastComment.bind(this);
+  }
 
+  get element() {
+    return this._element;
   }
 
   get template() {
@@ -339,12 +342,12 @@ class FilmPopup extends Component {
     return typeof this._onAddToFavorite === `function` && this._onAddToFavorite();
   }
 
-  _onChangeScore(value) {
-    return typeof this._onClick === `function` && this._onChange(value);
+  _onChangeScore(score) {
+    return typeof this._onClick === `function` && this._onChange(score);
   }
 
   _onTextareaEnter() {
-    let comment = {};
+    const comment = {};
     comment.author = `Olika Kell`;
     comment.emotion = this._element.querySelector(`.film-details__emoji-item:checked`).getAttribute(`value`);
     comment.comment = this._element.querySelector(`.film-details__comment-input`).value;
@@ -378,10 +381,10 @@ class FilmPopup extends Component {
     this._element.querySelector(`.film-details__control-label--favorite`)
       .addEventListener(`click`, this._onAddToFavorite);
 
-    let scores = this._element.querySelectorAll(`.film-details__user-rating-input`);
+    const scores = this._element.querySelectorAll(`.film-details__user-rating-input`);
     scores.forEach(
         (score) => score.addEventListener(`change`, () => {
-          this._onChangeScore(score.getAttribute(`value`));
+          this._onChangeScore(score);
         })
     );
 
@@ -393,7 +396,7 @@ class FilmPopup extends Component {
         }
       });
 
-    let icons = this._element.querySelectorAll(`.film-details__emoji-item`);
+    const icons = this._element.querySelectorAll(`.film-details__emoji-item`);
     icons.forEach(
         (icon) => icon.addEventListener(`change`, () =>
           this._changeIconMarkdown(icon.getAttribute(`value`))

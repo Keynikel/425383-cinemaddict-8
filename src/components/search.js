@@ -10,6 +10,10 @@ class Search extends Component {
     this._onWordsInput = this._onWordsInput.bind(this);
   }
 
+  get value() {
+    return this._element.value.toLowerCase();
+  }
+
   get template() {
     return `
       <input type="text" name="search" class="search__field" placeholder="Search">

@@ -19,7 +19,7 @@ export const createCommonCallbacks = (card, popup, film, allFilms) => {
   };
 
   popup.onChange = (newScore) => {
-    film.yourScore = newScore;
+    film.yourScore = parseInt(newScore.value, 10);
 
     view.blockRaitingInput(popup);
     api.updateFilm({id: film.id, data: film.toRAW()})
@@ -65,9 +65,9 @@ export const createCommonCallbacks = (card, popup, film, allFilms) => {
     evt.preventDefault();
     film.state.isWatched = !film.state.isWatched;
     if (film.state.isWatched) {
-      film._watchingDate = null;
+      film.watchingDate = null;
     } else {
-      film._watchingDate = moment().valueOf();
+      film.watchingDate = moment().valueOf();
     }
     if (film.state.isWatched && film.state.isListed) {
       film.state.isListed = !film.state.isListed;
@@ -136,9 +136,9 @@ export const createSpetialCallbacks = (card, popup, film, allFilms) => {
     evt.preventDefault();
     film.state.isWatched = !film.state.isWatched;
     if (film.state.isWatched) {
-      film._watchingDate = moment().valueOf();
+      film.watchingDate = moment().valueOf();
     } else {
-      film._watchingDate = null;
+      film.watchingDate = null;
     }
     if (film.state.isWatched && film.state.isListed) {
       film.state.isListed = !film.state.isListed;

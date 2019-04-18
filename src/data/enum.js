@@ -8,7 +8,7 @@ export const Authorize = {
   END_POINT: ` https://es8-demo-srv.appspot.com/moowle/`,
 };
 
-export const METHOD = {
+export const Method = {
   GET: `GET`,
   POST: `POST`,
   PUT: `PUT`,

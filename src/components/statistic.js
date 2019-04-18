@@ -100,7 +100,7 @@ class Statistic extends Component {
     });
     if (genres.length) {
       return genres.reduce((acc, item) => {
-        let buffer = this._findTopGenre(item);
+        const buffer = this._findTopGenre(item);
         Object.keys(buffer).forEach((key) => {
           if (acc[key]) {
             acc[key] += buffer[key];
@@ -116,7 +116,7 @@ class Statistic extends Component {
   }
 
   _sortGenresByPopular(genres) {
-    let keysSorted = Object.keys(genres).sort(function (a, b) {
+    const keysSorted = Object.keys(genres).sort(function (a, b) {
       return genres[b] - genres[a];
     });
     return keysSorted;

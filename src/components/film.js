@@ -28,6 +28,10 @@ class Film extends Component {
     this._onAddToFavorite = this._onAddToFavorite.bind(this);
   }
 
+  get element() {
+    return this._element;
+  }
+
   get template() {
     return `
       <article class="film-card">
@@ -50,6 +54,10 @@ class Film extends Component {
           <button class="film-card__controls-item button film-card__controls-item--favorite"><!--Mark as favorite-->FAV</button>
         </form>
       </article>`.trim();
+  }
+
+  set watchingDate(val) {
+    this._watchingDate = val;
   }
 
   set onClick(fn) {

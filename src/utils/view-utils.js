@@ -1,9 +1,9 @@
 import {shake, createElement} from './common-utils';
 
 // Обратная связь при указании рейтинга
-export const blockRaitingInput = (element) => {
-  const scoreButtons = element._element.querySelectorAll(`.film-details__user-rating-input`);
-  const scoreLabels = element._element.querySelectorAll(`.film-details__user-rating-label`);
+export const blockRaitingInput = (block) => {
+  const scoreButtons = block.element.querySelectorAll(`.film-details__user-rating-input`);
+  const scoreLabels = block.element.querySelectorAll(`.film-details__user-rating-label`);
   scoreButtons.forEach(
       (button, i) => {
         const label = scoreLabels[i];
@@ -13,9 +13,9 @@ export const blockRaitingInput = (element) => {
   );
 };
 
-export const unblockRaitingInput = (element) => {
-  const scoreButtons = element._element.querySelectorAll(`.film-details__user-rating-input`);
-  const scoreLabels = element._element.querySelectorAll(`.film-details__user-rating-label`);
+export const unblockRaitingInput = (block) => {
+  const scoreButtons = block.element.querySelectorAll(`.film-details__user-rating-input`);
+  const scoreLabels = block.element.querySelectorAll(`.film-details__user-rating-label`);
   scoreButtons.forEach(
       (button, i) => {
         const label = scoreLabels[i];
@@ -30,9 +30,9 @@ export const unblockRaitingInput = (element) => {
   );
 };
 
-export const errorRaitingInput = (element) => {
-  const scoreButtons = element._element.querySelectorAll(`.film-details__user-rating-input`);
-  const scoreLabels = element._element.querySelectorAll(`.film-details__user-rating-label`);
+export const errorRaitingInput = (block) => {
+  const scoreButtons = block.element.querySelectorAll(`.film-details__user-rating-input`);
+  const scoreLabels = block.element.querySelectorAll(`.film-details__user-rating-label`);
   scoreButtons.forEach(
       (button, i) => {
         const label = scoreLabels[i];
@@ -49,22 +49,22 @@ export const errorRaitingInput = (element) => {
 };
 
 // Обратная связь при комментировании
-export const blockComment = (element) => {
-  const inputField = element._element.querySelector(`.film-details__comment-input`);
+export const blockComment = (block) => {
+  const inputField = block.element.querySelector(`.film-details__comment-input`);
   inputField.disabled = true;
   inputField.style.border = `1px solid #979797`;
   inputField.style.background = `#979797`;
 };
 
-export const unblockComment = (element) => {
-  const inputField = element._element.querySelector(`.film-details__comment-input`);
+export const unblockComment = (block) => {
+  const inputField = block.element.querySelector(`.film-details__comment-input`);
   inputField.disabled = false;
   inputField.style.background = `#f6f6f6`;
   inputField.value = ``;
 };
 
-export const errorComment = (element) => {
-  const inputField = element._element.querySelector(`.film-details__comment-input`);
+export const errorComment = (block) => {
+  const inputField = block.element.querySelector(`.film-details__comment-input`);
   shake(inputField);
   inputField.disabled = false;
   inputField.style.background = `#f6f6f6`;
@@ -72,45 +72,45 @@ export const errorComment = (element) => {
 };
 
 // Обртная связь при удалении комментария
-export const blockRemoveButton = (element) => {
-  const removeButton = element._element.querySelector(`.film-details__watched-reset`);
+export const blockRemoveButton = (block) => {
+  const removeButton = block.element.querySelector(`.film-details__watched-reset`);
   removeButton.disabled = true;
   removeButton.style.color = `#979797`;
 };
 
-export const unblockRemoveButton = (element) => {
-  const removeButton = element._element.querySelector(`.film-details__watched-reset`);
+export const unblockRemoveButton = (block) => {
+  const removeButton = block.element.querySelector(`.film-details__watched-reset`);
   removeButton.disabled = false;
   removeButton.style.color = `#9da4aa`;
 };
 
-export const errorRemoveButton = (element) => {
-  const removeButton = element._element.querySelector(`.film-details__watched-reset`);
+export const errorRemoveButton = (block) => {
+  const removeButton = block.element.querySelector(`.film-details__watched-reset`);
   shake(removeButton);
   removeButton.disabled = false;
   removeButton.style.color = `red`;
 };
 
 // Обратная связь при изменении состояния фильма с карточки
-export const blockControls = (element) => {
-  const userButtons = element._element.querySelectorAll(`.film-card__controls button`);
+export const blockControls = (block) => {
+  const userButtons = block.element.querySelectorAll(`.film-card__controls button`);
   userButtons.forEach((button) => {
     button.disabled = true;
     button.style.opacity = `0.5`;
   });
 };
 
-export const unblockControls = (element) => {
-  const userButtons = element._element.querySelectorAll(`.film-card__controls button`);
+export const unblockControls = (block) => {
+  const userButtons = block.element.querySelectorAll(`.film-card__controls button`);
   userButtons.forEach((button) => {
     button.disabled = false;
     button.style.opacity = `1`;
   });
 };
 
-export const errorControls = (element) => {
-  shake(element._element);
-  const userButtons = element._element.querySelectorAll(`.film-card__controls button`);
+export const errorControls = (block) => {
+  shake(block.element);
+  const userButtons = block.element.querySelectorAll(`.film-card__controls button`);
   userButtons.forEach((button) => {
     button.disabled = false;
     button.style.opacity = `1`;

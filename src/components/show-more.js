@@ -12,6 +12,10 @@ class ShowMoreButton extends Component {
 
   }
 
+  get state() {
+    return this._state;
+  }
+
   get template() {
     return `<button class="films-list__show-more">Show more</button>`.trim();
   }

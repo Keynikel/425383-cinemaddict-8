@@ -42,7 +42,7 @@ class ModelFilm {
   }
 
   static parseFilms(data) {
-    return data.map(ModelFilm .parseFilm);
+    return data.map(ModelFilm.parseFilm);
   }
 
   static parseCountedFilms(data, count) {
