@@ -1,5 +1,5 @@
 import ModelFilm from './models/model-film';
-import {METHOD} from './data/enum';
+import {Method} from './data/enum';
 
 const checkStatus = (response) => {
   if (response.status >= 200 && response.status < 300) {
@@ -33,14 +33,14 @@ const API = class {
   updateFilm({id, data}) {
     return this._load({
       url: `movies/${id}`,
-      method: METHOD.PUT,
+      method: Method.PUT,
       body: JSON.stringify(data),
       headers: new Headers({'Content-Type': `application/json`})
     })
       .then(toJSON);
   }
 
-  _load({url, method = METHOD.GET, body = null, headers = new Headers()}) {
+  _load({url, method = Method.GET, body = null, headers = new Headers()}) {
     headers.append(`Authorization`, this._authorization);
 
     return fetch(`${this._endPoint}/${url}`, {method, body, headers})

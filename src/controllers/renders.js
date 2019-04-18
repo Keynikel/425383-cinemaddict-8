@@ -35,7 +35,7 @@ export const renderInterface = (allFilms, countToShow) => {
   cardsContainer.parentNode.appendChild(showMoreButton.render());
 
   searchField.onInput = () => {
-    const searchingValue = searchField._element.value.toLowerCase();
+    const searchingValue = searchField.value;
     const filtered = visibleFilms.filter((film) => film.title.toLowerCase().match(searchingValue));
     renderCards(filtered, allFilms);
   };
@@ -59,7 +59,7 @@ export const renderFilters = (filters, allFilms) => {
           mainContainer.querySelector(`.films`).classList.remove(`visually-hidden`);
           mainContainer.removeChild(mainContainer.querySelector(`.statistic`));
         }
-        let filteredCards = filterCards(allFilms, anchor);
+        const filteredCards = filterCards(allFilms, anchor);
         filter.showedFilms += FILMS_LOADING_STEP;
         renderFilters(FILTERS_DATA, allFilms);
         renderShowMoreButton(filteredCards, filter.showedFilms, anchor);
@@ -77,7 +77,7 @@ export const renderShowMoreButton = (allFilms, countToShow, state = `all`) => {
   if (countToShow >= allFilms.length) {
     showMoreButton.hideButton();
   } else {
-    if (showMoreButton._state === `hide`) {
+    if (showMoreButton.state === `hide`) {
       showMoreButton.showButton();
     }
   }
@@ -115,7 +115,7 @@ export const renderTopRatedCards = (films, container, allFilms) => {
 
 export const renderCharts = (films) => {
   const watchedFilms = films.filter((film) => film.state.isWatched);
-  let stats = new Statistic(watchedFilms);
+  const stats = new Statistic(watchedFilms);
 
   mainContainer.querySelector(`.films`).classList.add(`visually-hidden`);
   mainContainer.appendChild(stats.render());
